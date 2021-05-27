@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="darkBlue">#18285E</color>
-    <color name="darkGreen">#35680a</color>
-    <color name="lightBlue">#2764C7</color>
-
+    <color name="primary">#35680a</color>
+    <color name="primaryDark">#1b3605</color>
+    <color name="Secondary">#18285E</color>
+    <color name="SecondaryLight">#2764C7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
