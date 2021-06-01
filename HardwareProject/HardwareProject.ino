@@ -2,12 +2,11 @@
 // Gebruikte bibliotheken
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <LiquidCrystal_I2C.h>
 #include <ESP32Servo.h>
 
 // pinnumber for house servo's
 const int SERVO_HOUSE_1_PIN = 2;
-const float BLOW_TOTAL_COMPLETE = 200;
+const float BLOW_TOTAL_COMPLETE = 50;
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
 
@@ -16,7 +15,7 @@ const int BLOW_READER_PIN = 34;
 
 // Setting the pins for the LED's
 const int NR_OF_LEDS = 3;
-const int LED_PINS[NR_OF_LEDS] = {12, 13, 14};
+const int LED_PINS[NR_OF_LEDS] = {13, 15, 14};
 const int LED_CHANNELS[NR_OF_LEDS] = {1, 2, 3}; // Voor de ESP32 LED control module
 
 
@@ -72,6 +71,70 @@ void setLedIntensity(int ledNr, byte intensity)
 {
   byte pwmValue = map(intensity, 255, 0, 0, 255);
   ledcWrite(LED_CHANNELS[ledNr], pwmValue);
+}
+
+/*
+* Readsout blower and updates all the correct value's
+*/
+void handleBlower()
+{
+  // Reading the blow-motor, if value changed print it 
+  int newBlow = analogRead(BLOW_READER_PIN) / 20;
+  
+  // upload turning speed
+  if(newBlow != currentBlow) {
+    char payload[30];
+    sprintf(payload, "%d", newBlow);
+    mqttClient.publish(MQTT_TOPIC_BLOWER, payload);
+  
+    Serial.print("blowing changed: ");
+    Serial.println(payload);
+  }
+
+  // updating percentage blow
+  int percent = ((newBlow / BLOW_TOTAL_COMPLETE) * 100);
+  if (percent != 0) {
+    totalBlowPercent += percent;
+    char payloadPer[10];
+    sprintf(payloadPer, "%d", totalBlowPercent);
+    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
+
+    Serial.print("blowing percentage changed: ");
+    Serial.println(payloadPer);
+    Serial.println(totalBlowPercent);  
+  }
+
+  currentBlow = newBlow;
+}
+
+void handleLED()
+{
+  // clearing all LEDs
+  ledIntensities[0] = 255;
+  ledIntensities[1] = 255;
+  ledIntensities[2] = 255;
+
+  // Setting red LED
+  if (totalBlowPercent > 10) 
+  {
+    ledIntensities[2] = 0;
+  }
+
+  // Setting amber LED
+  if (totalBlowPercent > 50) 
+  {
+    ledIntensities[1] = 0;
+  }
+
+  // Setting green LED
+  if (totalBlowPercent > 100) 
+  {
+    ledIntensities[0] = 0;
+  }
+
+  setLedIntensity(0, ledIntensities[0]);
+  setLedIntensity(1, ledIntensities[1]);
+  setLedIntensity(2, ledIntensities[2]);
 }
 
 /*
@@ -156,34 +219,11 @@ void loop()
     servoHouse1.attach(33, 500, 2400); // Attach the servo after it has been detatched
   }
 
-
-  // Reading the blow-motor, if value changed print it 
-  int newBlow = analogRead(BLOW_READER_PIN) / 20;
-
-  // upload turning speed
-  if(newBlow != currentBlow) {
-    char payload[30];
-    sprintf(payload, "%d", newBlow);
-    mqttClient.publish(MQTT_TOPIC_BLOWER, payload);
+  // Handle blower
+  handleBlower();
   
-    Serial.print("blowing changed: ");
-    Serial.println(payload);
-  }
-
-  // updating percentage blow
-  int percent = ((newBlow / BLOW_TOTAL_COMPLETE) * 100);
-  if (percent != 0) {
-    totalBlowPercent += percent;
-    char payloadPer[10];
-    sprintf(payloadPer, "%d", totalBlowPercent);
-    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
-
-    Serial.print("blowing percentage changed: ");
-    Serial.println(payloadPer);
-    Serial.println(totalBlowPercent);  
-  }
-  
-  currentBlow = newBlow;
+  // Handle LEDs
+  handleLED();
 
   // Laat de ingebouwde LED knipperen
   ledIsOn = !ledIsOn;
