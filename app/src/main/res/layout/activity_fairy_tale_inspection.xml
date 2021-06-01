@@ -2,18 +2,21 @@
 <layout>
     <data>
         <variable name="data" type="com.example.mobapp.Fairytale" />
+        <variable name="Activity" type="com.example.mobapp.FairyTaleInspection" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fairy_tale_inspection"
+    tools:context=".FairyTaleInspection"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
         android:id="@+id/include"
-        layout="@layout/fairy_tale_top_border" />
+        layout="@layout/fairy_tale_top_border"
+        app:Activity="@{Activity}"
+        />
 
     <TextView
         android:id="@+id/textView"
@@ -58,6 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fairytaleTextTitle" />
 
     <Button
+        android:onClick="@{() -> Activity.finish()}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="volgende Stap"
