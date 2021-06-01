@@ -1,5 +1,4 @@
 *.iml
-.gradle
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -33,7 +32,6 @@ out/
 # release/
 
 # Gradle files
-.gradle/
 build/
 
 # Local configuration file (sdk path, etc)
