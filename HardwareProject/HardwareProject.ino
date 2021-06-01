@@ -7,6 +7,9 @@
 // Reset
 const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
 
+// Allow blowing
+const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/next";
+
 // pinnumber for house servo's
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
@@ -26,7 +29,7 @@ const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 400;
+const float BLOW_TOTAL_COMPLETE = 200;
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
 
@@ -62,9 +65,6 @@ WiFiClient wifiClient;
 //WiFiClientSecure wifiClient; // Om een met TLS beveiligde verbinding te kunnen gebruiken
 PubSubClient mqttClient(wifiClient);
 
-// button pressed
-bool button1PressedPrev = false;
-
 // END OF MQTT SETTINGS     //
 // ------------------------ //
 // DECALRATION OF VARIABLES //
@@ -83,6 +83,10 @@ byte ledIntensities[4] = {0, 0, 0, 0};
 int currentBlow = 0;
 int totalBlowPercent = 0;
 
+// button pressed
+bool button1PressedPrev = false;
+
+bool allowBlow = true;
 
 /*
  * Resets all the value's
@@ -205,6 +209,21 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
   }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
   {
     reset();
+  }else if (strcmp(topic, MQTT_TOPIC_START_BLOW) == 0)
+  {
+    char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
+    byte value; // Hierin komt de getalwaarde na conversie
+    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
+    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
+    strncpy(validPayload, (const char *) payload, length > 16 ? 16 : length);
+    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
+    sscanf((const char *) validPayload, "%u", &value);
+   
+    if(value == 0) {
+      allowBlow = false;
+    } else {
+      allowBlow = true;
+    }
   }
 }
 
@@ -313,6 +332,18 @@ void setup()
     Serial.print("Subscribed to topic ");
     Serial.println(MQTT_TOPIC_RESET);
   }
+
+  // Subscribe op de start topic
+  if (!mqttClient.subscribe(MQTT_TOPIC_START_BLOW, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
 }
 
 
@@ -338,14 +369,16 @@ void loop()
   }
 
   // Handle blower
-  handleBlower();
+  if(allowBlow == true) 
+  {
+    handleBlower();
+  }
   
   // Handle LEDs
   handleLED();
 
   // Controleer of een knop is ingedrukt en handel dat af
   bool button1PressedNow = !digitalRead(BUTTON1_PIN);\
-  Serial.println(button1PressedNow);
   if (button1PressedNow && !button1PressedPrev) {
     // Handel knopdruk af
     //Serial.println("Knop 1 ingedrukt");
