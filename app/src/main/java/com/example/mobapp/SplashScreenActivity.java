@@ -15,7 +15,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         //todo connect to MQTT server
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> startActivity(new Intent(this, MainActivity.class)), 3000);
-
+        new Handler(Looper.getMainLooper()).postDelayed(()-> {
+            startActivity(new Intent(this, MainActivity.class));
+            this.finish();
+        }, 3000);
     }
+
+
 }
