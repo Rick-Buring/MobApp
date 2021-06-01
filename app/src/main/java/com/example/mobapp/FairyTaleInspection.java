@@ -19,7 +19,6 @@ public class FairyTaleInspection extends AppCompatActivity{
 
         Fairytale fairytale = Fairytale.fairytales[id];
 
-
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
         binding.setData(fairytale);
@@ -28,6 +27,11 @@ public class FairyTaleInspection extends AppCompatActivity{
     public void popup(){
         new ShowPopup(new View(getApplicationContext()),(LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE), this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        popup();
     }
 
     @Override
