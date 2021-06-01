@@ -9,7 +9,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.FairytaleViewHolder> {
+public class FairyTaleAdapter extends RecyclerView.Adapter<FairyTaleAdapter.FairytaleViewHolder> {
 
     private final OnItemClickListener clickListener;
 
@@ -17,7 +17,7 @@ public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.Fair
         void onItemClick(int clickedPosition);
     }
 
-    public FairytaleAdapter(OnItemClickListener clickListener) {
+    public FairyTaleAdapter(OnItemClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -45,13 +45,13 @@ public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.Fair
     @Override
     public FairytaleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.sprookje_view_item, parent, false);
+        ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.fairytale_view_item, parent, false);
 
         return new FairytaleViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(FairytaleAdapter.FairytaleViewHolder holder, int position) {
+    public void onBindViewHolder(FairyTaleAdapter.FairytaleViewHolder holder, int position) {
         Fairytale fairytale = Fairytale.fairytales[position];
         holder.bind(fairytale);
     }

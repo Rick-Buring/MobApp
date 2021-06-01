@@ -11,10 +11,18 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 public class MQTTManager {
+    private static MQTTManager manager = null;
+
+    public static MQTTManager getManager() {
+        return manager;
+    }
+
+
     public static final String LOGTAG = "MQTTManager: ";
 
     private static final String BROKER_HOST_URL = "tcp://sendlab.nl:11884";
@@ -27,6 +35,8 @@ public class MQTTManager {
     private final MqttAndroidClient mqttAndroidClient;
 
     public MQTTManager(Context context) {
+        if (manager == null)
+            manager = this;
         // Show the automatically generated random client ID
         Log.i(LOGTAG, "Client ID (random) is " + CLIENT_ID);
         // Create the MQTT client, using the URL of the MQTT broker and the client ID
@@ -64,9 +74,7 @@ public class MQTTManager {
         // Add more options if necessary
         try {
             // Try to connect to the MQTT broker
-            IMqttToken token = client.connect(options);
-            // Set up callbacks for the result
-            token.setActionCallback(new IMqttActionListener() {
+            IMqttToken token = client.connect(options, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d(LOGTAG, "MQTT client is now connected to MQTT broker");
