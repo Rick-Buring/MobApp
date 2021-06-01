@@ -6,18 +6,22 @@
 
 // pinnumber for house servo's
 const int SERVO_HOUSE_1_PIN = 2;
-const float BLOW_TOTAL_COMPLETE = 50;
-const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
-const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
+const int SERVO_UP = 180;
+const int SERVO_DOWN = 0;
+const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/house/1";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
+const float BLOW_TOTAL_COMPLETE = 50;
+const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
+const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
 
 // Setting the pins for the LED's
 const int NR_OF_LEDS = 3;
 const int LED_PINS[NR_OF_LEDS] = {13, 15, 14};
 const int LED_CHANNELS[NR_OF_LEDS] = {1, 2, 3}; // Voor de ESP32 LED control module
 
+const int LINE_LENGTH = 4;
 
 // END OF CONSTANT VALUES   //
 // ------------------------ //
@@ -149,6 +153,10 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
   Serial.print("Payload length ");
   Serial.println(length);
 
+  if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0)
+  {
+    servoHouse1.write(SERVO_DOWN);
+  }
 }
 
 void setup()
@@ -206,6 +214,18 @@ void setup()
   {
     Serial.println("Connected to MQTT broker");
   }
+
+  // Subscribe op de house 1 topic
+  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE1, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE1);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE1);
+  }
 }
 
 
@@ -216,7 +236,8 @@ void loop()
   
   if (!servoHouse1.attached()) {
     servoHouse1.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse1.attach(33, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse1.attach(33, 50, 2400); // Attach the servo after it has been detatched
+    servoHouse1.write(SERVO_UP);
   }
 
   // Handle blower
