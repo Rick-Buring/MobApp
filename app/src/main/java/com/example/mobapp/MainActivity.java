@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     @Override
     public void onItemClick(int clickedPosition) {
-        //todo start activity with the right object
         Intent intent = new Intent(this, FairyTaleInspection.class);
         intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, clickedPosition);
         startActivity(intent);
