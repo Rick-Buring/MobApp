@@ -4,11 +4,22 @@
 #include <PubSubClient.h>
 #include <ESP32Servo.h>
 
+// Reset
+const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
+
 // pinnumber for house servo's
-const int SERVO_HOUSE_1_PIN = 2;
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
+
+const int SERVO_HOUSE_1_PIN = 33;
 const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/house/1";
+
+const int SERVO_HOUSE_2_PIN = 4;
+const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/house/2";
+
+const int SERVO_HOUSE_3_PIN = 19;
+const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/house/3";
+
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
@@ -56,6 +67,8 @@ PubSubClient mqttClient(wifiClient);
 
 // Servo controls
 Servo servoHouse1;
+Servo servoHouse2;
+Servo servoHouse3;
 
 // Led controls
 bool ledIsOn = true; // Voor de ingebouwde LED, soort keep-alive knipperlicht
@@ -65,6 +78,27 @@ byte ledIntensities[4] = {0, 0, 0, 0};
 int currentBlow = 0;
 int totalBlowPercent = 0;
 
+
+/*
+ * Resets all the value's
+ */
+void reset() 
+{
+  currentBlow = 0;
+  totalBlowPercent = 0;
+
+  servoHouse1.write(SERVO_UP);
+  servoHouse2.write(SERVO_UP);
+  servoHouse3.write(SERVO_UP);
+
+  ledIntensities[0] = 255;
+  ledIntensities[1] = 255;
+  ledIntensities[2] = 255;
+
+  setLedIntensity(0, ledIntensities[0]);
+  setLedIntensity(1, ledIntensities[1]);
+  setLedIntensity(2, ledIntensities[2]);
+}
 
 /*
  * Stel de LED helderheid in
@@ -156,6 +190,16 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0)
   {
     servoHouse1.write(SERVO_DOWN);
+  }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
+  {
+    servoHouse2.write(SERVO_DOWN);
+  }
+  else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
+  {
+    servoHouse3.write(SERVO_DOWN);
+  }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
+  {
+    reset();
   }
 }
 
@@ -226,6 +270,42 @@ void setup()
     Serial.print("Subscribed to topic ");
     Serial.println(MQTT_TOPIC_HOUSE1);
   }
+
+  // Subscribe op de house 2 topic
+  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE2, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE2);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE2);
+  }
+
+  // Subscribe op de house 3 topic
+  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE3, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE3);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_HOUSE3);
+  }
+
+  // Subscribe op de reset topic
+  if (!mqttClient.subscribe(MQTT_TOPIC_RESET, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
 }
 
 
@@ -236,8 +316,18 @@ void loop()
   
   if (!servoHouse1.attached()) {
     servoHouse1.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse1.attach(33, 50, 2400); // Attach the servo after it has been detatched
+    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse1.write(SERVO_UP);
+  }
+  if (!servoHouse2.attached()) {
+    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse2.write(SERVO_UP);
+  }
+  if (!servoHouse3.attached()) {
+    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse3.write(SERVO_UP);
   }
 
   // Handle blower
