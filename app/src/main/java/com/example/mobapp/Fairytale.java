@@ -1,8 +1,8 @@
 package com.example.mobapp;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Fairytale {
+public class Fairytale implements Serializable {
 
     private final String name;
     private final String location;
