@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
 
 public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.FairytaleViewHolder> {
 
