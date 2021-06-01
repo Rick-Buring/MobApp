@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MopApp">
         <service android:name="org.eclipse.paho.android.service.MqttService" />
-        <activity android:name=".fairy_tale_inspection"></activity>
+        <activity android:name=".FairyTaleInspection"></activity>
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

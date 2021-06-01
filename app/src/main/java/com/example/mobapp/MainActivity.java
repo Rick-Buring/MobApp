@@ -2,7 +2,6 @@ package com.example.mobapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,16 +26,8 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
     @Override
     public void onItemClick(int clickedPosition) {
         //todo start activity with the right object
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, FairyTaleInspection.class);
 //        intent.putExtra(FairyTaleActivity.FAIRYTALE_ID, clickedPosition);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onStop() {
-        // Disconnect from the MQTT broker when the activity is closed
-        Log.d("MainActivity", "Disconnecting from MQTT broker");
-        MQTTManager.getManager().disconnectFromBroker();
-        super.onStop();
     }
 }
