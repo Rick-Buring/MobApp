@@ -20,10 +20,13 @@ const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/house/2";
 const int SERVO_HOUSE_3_PIN = 19;
 const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/house/3";
 
+// constants for button
+const int BUTTON1_PIN = 2;
+const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 50;
+const float BLOW_TOTAL_COMPLETE = 400;
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
 
@@ -59,6 +62,8 @@ WiFiClient wifiClient;
 //WiFiClientSecure wifiClient; // Om een met TLS beveiligde verbinding te kunnen gebruiken
 PubSubClient mqttClient(wifiClient);
 
+// button pressed
+bool button1PressedPrev = false;
 
 // END OF MQTT SETTINGS     //
 // ------------------------ //
@@ -208,6 +213,8 @@ void setup()
   // Ingebouwde LED wordt als een soort keep-alive knipperLED gebruikt
   pinMode(LED_BUILTIN, OUTPUT);
 
+  pinMode(BUTTON1_PIN, INPUT_PULLUP);
+
   //Allow allocation of all timers
   ESP32PWM::allocateTimer(0);
   ESP32PWM::allocateTimer(1);
@@ -336,9 +343,19 @@ void loop()
   // Handle LEDs
   handleLED();
 
+  // Controleer of een knop is ingedrukt en handel dat af
+  bool button1PressedNow = !digitalRead(BUTTON1_PIN);\
+  Serial.println(button1PressedNow);
+  if (button1PressedNow && !button1PressedPrev) {
+    // Handel knopdruk af
+    //Serial.println("Knop 1 ingedrukt");
+    mqttClient.publish(MQTT_TOPIC_BUTTON1, "Pressed");
+  }
+  button1PressedPrev = button1PressedNow;
+  
   // Laat de ingebouwde LED knipperen
   ledIsOn = !ledIsOn;
   digitalWrite(LED_BUILTIN, ledIsOn);
   
-  delay(500);
+  delay(100);
 }
