@@ -1,9 +1,10 @@
 package com.example.mobapp;
 
-import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,17 +12,13 @@ import java.util.List;
 
 public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.FairytaleViewHolder> {
 
-    private Context appContext;
-    private List<Fairytale> fairytales;
-    private OnItemClickListener clickListener;
+    private final OnItemClickListener clickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int clickedPosition);
     }
 
-    public FairytaleAdapter(Context appContext, List<Fairytale> fairytales, OnItemClickListener clickListener) {
-        this.appContext = appContext;
-        this.fairytales = fairytales;
+    public FairytaleAdapter(OnItemClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
@@ -36,32 +33,34 @@ public class FairytaleAdapter extends RecyclerView.Adapter<FairytaleAdapter.Fair
 
         public void bind(Object obj){
             this.binding.setVariable(BR.data, obj);
-            binding.executePendingBindings();
+            this.binding.executePendingBindings();
         }
 
         @Override
         public void onClick(View v) {
-
+            int pos = getAdapterPosition();
+            clickListener.onItemClick(pos);
         }
     }
 
     @Override
     public FairytaleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.sprookje_view_item, parent, false);
 
-        return null;
+        return new FairytaleViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(FairytaleAdapter.FairytaleViewHolder holder, int position) {
-
+        Fairytale fairytale = Fairytale.fairytales[position];
+        holder.bind(fairytale);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return Fairytale.fairytales.length;
     }
-
-
 
 
 }
