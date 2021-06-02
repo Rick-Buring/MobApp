@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
     @Override
     public void onItemClick(int clickedPosition) {
         this.clickedPosition = clickedPosition;
-        new ShowPopup("Weet je zeker dat je dit sprookje wilt starten?",
+        new ShowPopup( getString(R.string.start_fairy_popup),
                 "ja",
                 "nee",
                 new View(getApplicationContext()), getSystemService(LayoutInflater.class),

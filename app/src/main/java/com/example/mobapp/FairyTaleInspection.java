@@ -17,15 +17,15 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         super.onCreate(savedInstanceState);
         int id =(Integer) getIntent().getExtras().get(FAIRYTALE_ID);
 
-        Fairytale fairytale = Fairytale.fairytales[id];
+        Fairytale fairyTale = Fairytale.fairytales[id];
 
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
-        binding.setData(fairytale);
+        binding.setData(fairyTale);
     }
 
     public void popup(){
-        new ShowPopup( "Weet je Zeker dat je wil stoppen met het sprookje?",
+        new ShowPopup(getString(R.string.quit_fairy_popup),
                 "Ja",
                 "Nee",
                 new View(getApplicationContext()),
