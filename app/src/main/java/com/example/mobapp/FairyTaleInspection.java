@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 
-public class FairyTaleInspection extends AppCompatActivity{
+public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction{
 
     public static final String FAIRYTALE_ID = "FAIRYTALE_ID";
 
@@ -25,8 +25,13 @@ public class FairyTaleInspection extends AppCompatActivity{
     }
 
     public void popup(){
-        new ShowPopup(new View(getApplicationContext()),(LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE), this);
+        new ShowPopup( "Weet je Zeker dat je wil stoppen met het sprookje?",
+                "Ja",
+                "Nee",
+                new View(getApplicationContext()),
+                getSystemService(LayoutInflater.class),
+                this)
+                .show();
     }
 
     @Override
@@ -37,5 +42,10 @@ public class FairyTaleInspection extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void performAction() {
+        this.finish();
     }
 }

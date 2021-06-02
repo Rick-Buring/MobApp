@@ -1,6 +1,5 @@
 package com.example.mobapp;
 
-import android.app.Activity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +9,35 @@ import android.widget.PopupWindow;
 import com.example.mobapp.databinding.PopupWindowBinding;
 
 public class ShowPopup {
-    private PopupWindow popupWindow;
-    private Activity activity;
 
-    public ShowPopup(View view, LayoutInflater inflater, Activity activity) {
+    public interface PopupAction {
+        void performAction();
+    }
+
+    private PopupWindow popupWindow;
+
+    private final String message;
+    private final String text1;
+    private final String text2;
+
+    private final LayoutInflater inflater;
+    private final PopupAction popupAction;
+    private final View view;
+
+
+
+    public ShowPopup(String message, String text1, String text2, View view, LayoutInflater inflater, PopupAction popupAction) {
+        this.message = message;
+        this.text1 = text1;
+        this.text2 = text2;
+        this.view = view;
+        this.inflater = inflater;
+        this.popupAction = popupAction;
+    }
+
+    public void show() {
         // inflate the layout of the popup window
-        this.activity = activity;
-        View popupView = inflater.inflate(R.layout.popup_window, null);
+        View popupView = this.inflater.inflate(R.layout.popup_window, null);
 
         PopupWindowBinding binding = PopupWindowBinding.bind(popupView);
         binding.setPopup(this);
@@ -38,18 +59,25 @@ public class ShowPopup {
         });
     }
 
-    public void finish(){
-        if(activity!= null)
-            activity.finish();
+    public void action() {
+        this.popupAction.performAction();
         dismiss();
     }
 
-    public void dismiss(){
+    public void dismiss() {
         System.out.println("am i here?");
-        if(popupWindow != null)
-        {
-            popupWindow.dismiss();
-            popupWindow = null;
-        }
+        popupWindow.dismiss();
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getText1() {
+        return text1;
+    }
+
+    public String getText2() {
+        return text2;
     }
 }
