@@ -18,6 +18,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final int image;
     private int step;
 
+    @Bindable
     public boolean isClickable() {
         return clickable;
     }
@@ -34,7 +35,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.image = image;
         this.step = 1;
         this.topic = topic;
-        this.color = R.color.transparend;
+        this.color = R.color.transparent;
         this.clickable = true;
     }
 
@@ -89,14 +90,17 @@ public class Fairytale extends BaseObservable implements Serializable {
         return this.topic;
     }
 
+    private void setClickable(boolean clickable) {
+        this.clickable = clickable;
+        notifyPropertyChanged(BR.clickable);
+    }
+
     public void MessageReceived(MqttMessage message) {
         Log.d("TAG", "MessageReceived: " + message);
         if(message.toString().equals("true")){
-            this.setColor(R.color.transparend);
-            this.clickable = true;
+            setClickable(true);
         }else if(message.toString().equals("false")){
-            this.setColor(R.color.disabledColor);
-            this.clickable = false;
+            setClickable(false);
         }
     }
 }

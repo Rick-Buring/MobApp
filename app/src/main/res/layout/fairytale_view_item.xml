@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+        <import type="com.example.mobapp.R" />
         <variable name="data" type="com.example.mobapp.Fairytale" />
     </data>
 
@@ -10,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:foreground="@{data.color}"
+        android:foreground="@{data.clickable ? 0 : R.color.disabledColor}"
         >
 
         <ImageView
