@@ -11,11 +11,12 @@ import androidx.databinding.DataBindingUtil;
 public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction{
 
     public static final String FAIRYTALE_ID = "FAIRYTALE_ID";
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int id =(Integer) getIntent().getExtras().get(FAIRYTALE_ID);
+        this.id =(Integer) getIntent().getExtras().get(FAIRYTALE_ID);
 
         Fairytale fairyTale = Fairytale.fairytales[id];
 
@@ -46,6 +47,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "true");
         this.finish();
     }
 }
