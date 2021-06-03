@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.OnItemClickListener, ShowPopup.PopupAction {
 
+    public static final String topicLocation = "ti/1.4/b1/availability/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,10 +23,21 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         recyclerView.setAdapter(fairytaleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+
+        MQTTManager manager = MQTTManager.getManager();
+
+        for (Fairytale tale: Fairytale.fairytales) {
+            manager.subscribeToTopic(topicLocation + tale.getTopic());
+        }
+
+        manager.publishMessage(topicLocation + "request", "request availability");
     }
 
     @Override
     public void onItemClick(int clickedPosition) {
+        if(!Fairytale.fairytales[clickedPosition].isClickable())
+            return;
         this.clickedPosition = clickedPosition;
         new ShowPopup( getString(R.string.start_fairy_popup),
                 "ja",
@@ -38,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     @Override
     public void performAction() {
+        MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "false");
         Intent intent = new Intent(this, FairyTaleInspection.class);
         intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
         startActivity(intent);

@@ -24,8 +24,6 @@ public class ShowPopup {
     private final PopupAction popupAction;
     private final View view;
 
-
-
     public ShowPopup(String message, String text1, String text2, View view, LayoutInflater inflater, PopupAction popupAction) {
         this.message = message;
         this.text1 = text1;
@@ -65,7 +63,6 @@ public class ShowPopup {
     }
 
     public void dismiss() {
-        System.out.println("am i here?");
         popupWindow.dismiss();
     }
 

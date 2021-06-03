@@ -17,11 +17,9 @@ import java.util.UUID;
 
 public class MQTTManager {
     private static MQTTManager manager = null;
-
     public static MQTTManager getManager() {
         return manager;
     }
-
 
     public static final String LOGTAG = "MQTTManager: ";
 
@@ -52,6 +50,13 @@ public class MQTTManager {
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 Log.d(LOGTAG, "MQTT client received message " + message + " on topic " + topic);
                 //todo Check what topic the message is for and handle accordingly
+                if(topic.contains("ti/1.4/b1/availability")){
+                    for (Fairytale tale : Fairytale.fairytales) {
+                        if(topic.contains(tale.getTopic())){
+                            tale.MessageReceived(message);
+                        }
+                    }
+                }
             }
 
             @Override
@@ -130,6 +135,7 @@ public class MQTTManager {
             message.setRetained(false);
             // Publish the message via the MQTT broker
             this.mqttAndroidClient.publish(topic, message);
+            Log.d(LOGTAG, "publishMessage: " + message);
         } catch (UnsupportedEncodingException | MqttException e) {
             Log.e(LOGTAG, "MQTT exception while publishing topic to MQTT broker, msg: " + e.getMessage() +
                     ", cause: " + e.getCause());
@@ -150,8 +156,7 @@ public class MQTTManager {
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.e(LOGTAG, "MQTT failed to subscribe to topic " + topic + " because: " +
-                            exception.getLocalizedMessage());
+                    Log.e(LOGTAG, "MQTT failed to subscribe to topic " + topic + " because: " + exception);
                 }
             });
         } catch (MqttException e) {
@@ -183,5 +188,11 @@ public class MQTTManager {
                     e.getReasonCode() + ", msg: " + e.getMessage() + ", cause: " + e.getCause());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        disconnectFromBroker();
+        super.finalize();
     }
 }

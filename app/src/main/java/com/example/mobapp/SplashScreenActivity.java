@@ -16,6 +16,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new MQTTManager(this);
 
 
+
         new Handler(Looper.getMainLooper()).postDelayed(()-> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
