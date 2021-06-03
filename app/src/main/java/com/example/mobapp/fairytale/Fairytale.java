@@ -1,7 +1,10 @@
-package com.example.mobapp;
+package com.example.mobapp.fairytale;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+
+import com.example.mobapp.BR;
+import com.example.mobapp.R;
 
 import java.io.Serializable;
 
@@ -31,10 +34,10 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String getStep() {
-        //todo make a not hardcoded string
-        return "stap: " + step;
+    public int getStep() {
+        return this.step;
     }
+
     @Bindable
     public int getImage() {
         return image;

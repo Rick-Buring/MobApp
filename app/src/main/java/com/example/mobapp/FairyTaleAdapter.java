@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mobapp.fairytale.Fairytale;
+
 
 public class FairyTaleAdapter extends RecyclerView.Adapter<FairyTaleAdapter.FairytaleViewHolder> {
 
