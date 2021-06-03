@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         RecyclerView recyclerView = findViewById(R.id.recycleView);
         FairyTaleAdapter fairytaleAdapter = new FairyTaleAdapter(this);
         recyclerView.setAdapter(fairytaleAdapter);
