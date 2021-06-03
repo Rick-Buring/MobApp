@@ -33,9 +33,10 @@ public class Fairytale extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.step);
     }
 
+    //Dit moet een String zijn
     @Bindable
-    public int getStep() {
-        return this.step;
+    public String getStep() {
+        return this.step + "";
     }
 
     @Bindable
@@ -61,7 +62,7 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     public static Fairytale[] fairytales = new Fairytale[]{
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground),
-      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground),
+      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer2", R.drawable.ic_launcher_foreground),
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground),
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground),
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground),
