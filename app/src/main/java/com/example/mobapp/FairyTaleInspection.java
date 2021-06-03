@@ -48,7 +48,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), new byte[]{1});
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "0");
         this.finish();
     }
 }
