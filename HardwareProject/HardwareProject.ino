@@ -46,8 +46,14 @@ const int LINE_LENGTH = 4;
 
 
 // Zelf instellen voor je eigen WLAN
-const char *WLAN_SSID = "Ziggo89DC852";
-const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+
+// Wifi Jesse
+//const char *WLAN_SSID = "Ziggo89DC852";
+//const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+
+// Wifi school laptop Jesse
+const char *WLAN_SSID = "ESP_WIFI_B1";
+const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
 // CLIENT_ID moet uniek zijn, dus zelf aanpassen (willekeurige letters en cijfers)
 const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
