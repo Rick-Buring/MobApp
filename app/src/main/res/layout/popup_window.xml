@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="popup"
+            type="com.example.mobapp.ShowPopup" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/notification_background"
+        android:padding="20dp"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:layout_margin="8dp"
+            android:id="@+id/notification"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="this is a popup"
+            android:text="@{popup.message}"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@id/cancelBtn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:layout_margin="8dp"
+            android:id="@+id/cancelBtn"
+            android:hint="Cancel"
+            android:text="@{popup.text2}"
+            android:backgroundTint="@color/SecondaryLight"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> popup.dismiss()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/accept"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/notification" />
+
+        <Button
+            android:layout_margin="8dp"
+            android:id="@+id/accept"
+            android:hint="Accept"
+            android:text="@{popup.text1}"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> popup.action()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancelBtn"
+            app:layout_constraintTop_toBottomOf="@id/notification" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

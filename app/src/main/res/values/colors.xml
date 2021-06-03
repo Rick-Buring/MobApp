@@ -6,4 +6,6 @@
     <color name="SecondaryLight">#2764C7</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="disabledColor">#80000000</color>
 </resources>
