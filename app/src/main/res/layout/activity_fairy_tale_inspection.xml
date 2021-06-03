@@ -5,7 +5,7 @@
 
         <variable
             name="data"
-            type="com.example.mobapp.Fairytale" />
+            type="com.example.mobapp.fairytales.Fairytale" />
 
         <variable
             name="Activity"
@@ -70,20 +70,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fairytaleLayout" />
 
-        <TextView
+        <ViewStub
+            android:id="@+id/inspection_main_content"
+            android:inflatedId="@+id/inspection_inflator"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            android:text="@{data.description}"
-            android:textColorHint="@color/black"
-            android:textSize="18sp"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fairytaleTextTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/fairytaleTextTitle"/>
 
         <Button
+            android:id="@+id/inspector_nextbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

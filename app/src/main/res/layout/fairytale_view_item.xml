@@ -3,7 +3,7 @@
 
     <data>
         <import type="com.example.mobapp.R" />
-        <variable name="data" type="com.example.mobapp.Fairytale" />
+        <variable name="data" type="com.example.mobapp.fairytales.Fairytale" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

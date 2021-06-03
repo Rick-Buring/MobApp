@@ -1,12 +1,18 @@
-package com.example.mobapp;
+package com.example.mobapp.fairytales;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.example.mobapp.BR;
+import com.example.mobapp.R;
+import com.example.mobapp.step.Step;
+
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Fairytale extends BaseObservable implements Serializable {
 
@@ -17,6 +23,8 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String description;
     private final int image;
     private int step;
+
+    protected final HashMap<Integer, Step> steps;
 
     @Bindable
     public boolean isClickable() {
@@ -37,6 +45,15 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.topic = topic;
         this.color = R.color.transparent;
         this.clickable = true;
+
+        this.steps = new HashMap<>();
+    }
+
+    public int getLayout() {
+        if(this.steps.containsKey(this.step)) {
+            return this.steps.get(step).getLayout();
+        }
+        return 0;
     }
 
     public void nextStep(){
@@ -81,7 +98,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     public static Fairytale[] fairytales = new Fairytale[]{
-      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground,"TheWulfAndThreePigs"),
+      new FairytaleThreePigs(),
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
       new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
     };
