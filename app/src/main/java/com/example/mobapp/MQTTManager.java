@@ -123,13 +123,11 @@ public class MQTTManager {
         }
     }
 
-    public void publishMessage(String topic, String msg) {
-        byte[] encodedPayload = new byte[0];
+    public void publishMessage(String topic, byte[] msg) {
         try {
             // Convert the message to a UTF-8 encoded byte array
-            encodedPayload = msg.getBytes("UTF-8");
             // Store it in an MqttMessage
-            MqttMessage message = new MqttMessage(encodedPayload);
+            MqttMessage message = new MqttMessage(msg);
             // Set parameters for the message
             message.setQos(QUALITY_OF_SERVICE);
             message.setRetained(false);
