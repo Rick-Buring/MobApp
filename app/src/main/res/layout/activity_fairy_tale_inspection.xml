@@ -35,17 +35,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include" />
 
-        <ImageView
-            android:id="@+id/fairytaleImageView"
+        <LinearLayout
+            android:id="@+id/fairytaleLayout"
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
+
             android:background="@drawable/blue_white_border"
-            app:imageResource="@{data.image}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintTop_toBottomOf="@+id/include">
+
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="246dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/fairytale_biggetjeseind"
+            app:imageResource="@{data.image}" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/fairytaleTextTitle"
@@ -58,7 +68,7 @@
             android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fairytaleImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/fairytaleLayout" />
 
         <TextView
             android:layout_width="0dp"
