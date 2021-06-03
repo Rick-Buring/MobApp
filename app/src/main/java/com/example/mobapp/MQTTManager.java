@@ -134,7 +134,7 @@ public class MQTTManager {
             // Publish the message via the MQTT broker
             this.mqttAndroidClient.publish(topic, message);
             Log.d(LOGTAG, "publishMessage: " + message);
-        } catch (UnsupportedEncodingException | MqttException e) {
+        } catch (MqttException e) {
             Log.e(LOGTAG, "MQTT exception while publishing topic to MQTT broker, msg: " + e.getMessage() +
                     ", cause: " + e.getCause());
             e.printStackTrace();

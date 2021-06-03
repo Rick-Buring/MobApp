@@ -6,16 +6,23 @@
 
         <item name="android:statusBarColor" tools:targetApi="l">@color/secondary_light</item>
 
-        <item name="android:textColor"> @color/white</item>
+        <item name="android:textColor"> @color/black</item>
 
-
-
-        <item name="android:buttonStyle">@style/ButtonColor</item>
         <item name="colorButtonNormal">@color/secondary</item>
+
+        <item name="buttonStyle"> @style/buttonStyle </item>
+
+        <item name="materialButtonStyle">@style/buttonStyle</item>
+
     </style>
 
-    <style name="ButtonColor" parent="@android:style/Widget.Button">
+    <style name="buttonStyle">
         <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
 </resources>
