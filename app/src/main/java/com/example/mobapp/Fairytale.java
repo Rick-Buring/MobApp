@@ -97,9 +97,9 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     public void MessageReceived(MqttMessage message) {
         Log.d("TAG", "MessageReceived: " + message);
-        if(message.getPayload()[0] == 1 && message.getPayload().length == 1){
+        if(message.toString().equals("1")){
             setClickable(true);
-        }else if(message.getPayload()[0] == 0 && message.getPayload().length == 1){
+        }else if(message.toString().equals("0")){
             setClickable(false);
         }
     }
