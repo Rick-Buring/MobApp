@@ -2,7 +2,6 @@
 <layout>
 
     <data>
-
         <variable
             name="data"
             type="com.example.mobapp.Fairytale" />
@@ -19,11 +18,49 @@
         android:layout_height="match_parent"
         tools:context=".FairyTaleInspection">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/fairy_tale_top_border"
-            app:Activity="@{Activity}"
-            app:FaryTale="@{data}"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:background="@drawable/gradient"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:showIn="@layout/activity_fairy_tale_inspection">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@{data.name}"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> Activity.popup()}"
+                android:background="@drawable/butten_rounding_white"
+                android:text="Stop sprookje"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/textView"
@@ -33,7 +70,7 @@
             android:text="@{data.step}"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintTop_toBottomOf="@id/topBar" />
 
         <LinearLayout
             android:id="@+id/fairytaleLayout"
@@ -45,7 +82,7 @@
 
             android:background="@drawable/blue_white_border"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include">
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
 
 
@@ -84,14 +121,15 @@
             app:layout_constraintTop_toBottomOf="@+id/fairytaleTextTitle" />
 
         <Button
+            android:id="@+id/nextStep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:onClick="@{() -> data.nextStep()}"
+            android:background="@drawable/butten_rounding_green"
             android:text="@string/volgende_stap"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
