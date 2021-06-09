@@ -32,19 +32,16 @@ public class Fairytale extends BaseObservable implements Serializable {
 
         private final Integer view;
         private final int text;
-        private final Class<?> bindClass;
 
 
-        public fairytaleStepView(Integer view, Class<?> bindClass) {
+        public fairytaleStepView(Integer view) {
             this.view = view;
-            this.bindClass = bindClass;
             this.text = R.string.blaas;
         }
 
-        public fairytaleStepView(Integer view, int text, Class<?> bindClass) {
+        public fairytaleStepView(Integer view, int text) {
             this.view = view;
             this.text = text;
-            this.bindClass = bindClass;
         }
 
         public Integer getView() {
@@ -53,9 +50,6 @@ public class Fairytale extends BaseObservable implements Serializable {
 
         public int getText() {
             return text;
-        }
-        public Class getBindClass() {
-            return bindClass;
         }
 
     }

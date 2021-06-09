@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         MQTTManager manager = MQTTManager.getManager();
 
         for (Fairytale tale: Fairytale.fairytales) {
-            manager.subscribeToTopic(topicLocation + tale.getName());
+            manager.subscribeToTopic(topicLocation + tale.getTopic());
         }
 
         manager.publishMessage(topicLocation + "availability/request", " ");
