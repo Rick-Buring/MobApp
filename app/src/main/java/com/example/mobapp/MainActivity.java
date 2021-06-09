@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         for (Fairytale tale: Fairytale.fairytales) {
             manager.subscribeToTopic(topicLocation + tale.getTopic());
         }
+
+        manager.publishMessage(topicLocation + "availability/request", " ");
     }
 
     @Override

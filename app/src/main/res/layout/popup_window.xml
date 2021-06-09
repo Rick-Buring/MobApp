@@ -10,59 +10,73 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/notification_background"
-        android:padding="20dp"
-        android:layout_margin="30dp">
-
-        <TextView
-            android:layout_margin="8dp"
-            android:id="@+id/notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="this is a popup"
-            android:text="@{popup.message}"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:padding="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/notification"
+            android:background="@drawable/notification_background"
+            android:layout_margin="20dp"
+            android:padding="20dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             >
 
-            <Button
+
+            <TextView
                 android:layout_margin="8dp"
-                android:id="@+id/cancelBtn"
-                android:hint="Cancel"
-                android:text="@{popup.text2}"
-                android:background="@drawable/butten_rounding_white"
+                android:id="@+id/notification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> popup.dismiss()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/accept"
-                app:layout_constraintStart_toStartOf="parent"
+                android:hint="this is a popup"
+                android:text="@{popup.message}"
+                android:textAlignment="center"
+                android:textSize="25sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:layout_margin="8dp"
-                android:id="@+id/accept"
-                android:hint="Accept"
-                android:text="@{popup.text1}"
-                android:background="@drawable/butten_rounding_green"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> popup.action()}"
+                app:layout_constraintTop_toBottomOf="@id/notification"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cancelBtn"
-                app:layout_constraintTop_toTopOf="parent" />
+                >
+
+                <Button
+                    android:layout_margin="8dp"
+                    android:id="@+id/cancelBtn"
+                    android:hint="Cancel"
+                    android:text="@{popup.text2}"
+                    android:background="@drawable/butten_rounding_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> popup.dismiss()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/accept"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:layout_margin="8dp"
+                    android:id="@+id/accept"
+                    android:hint="Accept"
+                    android:text="@{popup.text1}"
+                    android:background="@drawable/butten_rounding_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> popup.action()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cancelBtn"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

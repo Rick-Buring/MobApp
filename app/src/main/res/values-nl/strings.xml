@@ -12,4 +12,7 @@
     <string name="start_fairy_popup">Weet je zeker dat je dit sprookje wilt starten?</string>
     <string name="quit_fairy_popup">Weet je Zeker dat je wil stoppen met het sprookje?</string>
     <string name="blaas">Blaas in de meter</string>
+    <string name="step">Stap %1$d / %2$d</string>
+    <string name="in_use">Iemand anders gebruikt dit sprookje</string>
+    <string name="press_button">druk op de knop om te beginnen</string>
 </resources>

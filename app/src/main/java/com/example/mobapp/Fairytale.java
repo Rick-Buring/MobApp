@@ -18,6 +18,13 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String description;
     private final String topic;
 
+    private int available;
+
+    @Bindable
+    public int getAvailable() {
+        return available;
+    }
+
     private int step;
     private int image;
     private boolean clickable;
@@ -62,6 +69,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.image = image;
         this.step = 0;
         this.topic = topic;
+        this.available = R.string.press_button;
         this.clickable = false;
         this.views = new ArrayList<>();
     }
@@ -78,10 +86,13 @@ public class Fairytale extends BaseObservable implements Serializable {
             setClickable(true);
         } else if (message.toString().equals("1")) {
             setClickable(false);
-        } else if (message.toString().equals("2")){
+            this.available = R.string.in_use;
+            notifyPropertyChanged(BR.available);
+        } else if (message.toString().equals("2")) {
             setClickable(false);
-        }
-        else {
+            this.available = R.string.press_button;
+            notifyPropertyChanged(BR.available);
+        } else {
             feedback = message.toString();
             notifyPropertyChanged(BR.feedback);
         }

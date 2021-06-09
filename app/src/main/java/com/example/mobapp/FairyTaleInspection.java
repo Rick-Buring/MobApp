@@ -3,7 +3,6 @@ package com.example.mobapp;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextSwitcher;
 import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +65,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     }
 
     public void popup() {
+
         new ShowPopup(getString(R.string.quit_fairy_popup),
                 "Ja",
                 "Nee",
@@ -88,7 +88,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic(), "0");
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic(), "2");
         MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic() + "/reset", " ");
         this.finish();
     }

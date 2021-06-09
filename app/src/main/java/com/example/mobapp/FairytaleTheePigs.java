@@ -33,7 +33,7 @@ public class FairytaleTheePigs extends Fairytale {
     @Override
     public void nextStep() {
         setFeedback("");
-        notifyPropertyChanged(BR.text);
+        notifyPropertyChanged(BR.feedback);
         if (getStep() + 1 >= views.size())
             setStep(0);
         else
