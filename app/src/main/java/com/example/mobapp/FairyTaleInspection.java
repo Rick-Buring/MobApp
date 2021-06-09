@@ -51,4 +51,10 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "0");
         this.finish();
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

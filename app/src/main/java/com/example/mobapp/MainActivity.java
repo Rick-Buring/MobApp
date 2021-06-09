@@ -55,5 +55,12 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         Intent intent = new Intent(this, FairyTaleInspection.class);
         intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }
