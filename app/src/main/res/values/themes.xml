@@ -8,8 +8,6 @@
 
         <item name="android:textColor"> @color/black</item>
 
-        <item name="colorButtonNormal">@color/secondary</item>
-
         <item name="buttonStyle"> @style/buttonStyle </item>
 
         <item name="materialButtonStyle">@style/buttonStyle</item>

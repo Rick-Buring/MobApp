@@ -3,9 +3,15 @@
 
     <color name="primary">#35680A</color>
     <color name="primary_light">#70c043</color>
-<!--    <color name="primary_light">#77EBA6</color>-->
-    <color name="secondary">#18285e</color>
-    <color name="secondary_light">#4EDEAF</color>
+    
+    <color name="button_color_start">#09D822</color>
+    <color name="button_color_end">#97cf4a</color>
+
+    <color name="background_start">#E0F1C8</color>
+    <color name="background_end">#3ea24a</color>
+
+    <color name="gradient_start">#3ea24a</color>
+    <color name="gradient_end">#f097cf4a</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

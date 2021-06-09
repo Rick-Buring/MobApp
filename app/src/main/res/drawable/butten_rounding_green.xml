@@ -2,14 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/primary_light" />
             <corners android:radius="10dp"/>
             <stroke
                 android:width="1dp"
                 android:color="@color/black" />
             <gradient
-                android:startColor="#09D822"
-                android:endColor="#97cf4a"
+                android:startColor="@color/button_color_start"
+                android:endColor="@color/button_color_end"
                 android:angle="45"
                 />
         </shape>
