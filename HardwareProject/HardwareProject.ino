@@ -293,19 +293,9 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     reset();
   }else if (strcmp(topic, MQTT_TOPIC_START_BLOW) == 0)
   {
-    char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
-    byte value; // Hierin komt de getalwaarde na conversie
-    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
-    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
-    strncpy(validPayload, (const char *) payload, length > 16 ? 16 : length);
-    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
-    sscanf((const char *) validPayload, "%u", &value);
-   
-    if(value == 0) {
-      allowBlow = false;
-    } else {
-      allowBlow = true;
-    }
+    allowBlow = true;
+    clearBlow();
+    
   }else if (strcmp(topic, MQTT_TOPIC_LOCK) == 0)
   {
     char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
