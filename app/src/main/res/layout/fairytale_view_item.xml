@@ -2,9 +2,14 @@
 <layout>
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <import type="com.example.mobapp.R" />
-        <variable name="data" type="com.example.mobapp.Fairytale" />
+
+        <variable
+            name="data"
+            type="com.example.mobapp.Fairytale" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,11 +17,97 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:background="@drawable/background_listview"
-        android:foreground="@{data.clickable ? 0 : R.color.disabledColor}"
-        >
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/background_listview">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="@{data.clickable ? 0 : R.color.disabledColor}">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                app:imageResource="@{data.image}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".4" />
+
+            <TextView
+                android:id="@+id/fairytaleTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="blablabla"
+                android:text="@{data.name}"
+                android:textAlignment="center"
+
+
+                app:layout_constraintBottom_toTopOf="@id/timeAndLocation"
+                app:layout_constraintLeft_toRightOf="@id/guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/timeAndLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/description"
+                app:layout_constraintLeft_toRightOf="@id/guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fairytaleTitle">
+
+                <TextView
+                    android:id="@+id/timeToComplete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="blablabla"
+                    android:text="@{data.timeToComplete}"
+                    android:textAlignment="center"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/location"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="blablabla"
+                    android:text="@{data.location}"
+                    android:textAlignment="center"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/timeToComplete"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="blablabla"
+                android:text="@{data.description}"
+                android:textAlignment="center"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/timeAndLocation" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,99 +116,12 @@
             android:textColor="@color/red"
             android:textSize="25sp"
             android:visibility="@{data.clickable ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            app:imageResource="@{data.image}"
-            android:cropToPadding="false"
-            android:adjustViewBounds="true"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/guideline"
-            />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".4" />
-
-        <TextView
-            android:id="@+id/fairytaleTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{data.name}"
-            android:hint="blablabla"
-            android:textAlignment="center"
-
-
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/timeAndLocation"
-            />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/timeAndLocation"
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/fairytaleTitle"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/description"
-            >
-
-            <TextView
-                android:id="@+id/timeToComplete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{data.timeToComplete}"
-                android:hint="blablabla"
-                android:textAlignment="center"
-
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/location"
-                />
-
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{data.location}"
-                android:textAlignment="center"
-                android:hint="blablabla"
-
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/timeToComplete"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{data.description}"
-            android:hint="blablabla"
-            android:textAlignment="center"
-
-            app:layout_constraintTop_toBottomOf="@id/timeAndLocation"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
