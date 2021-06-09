@@ -5,37 +5,38 @@
 #include <ESP32Servo.h>
 
 // Reset
-const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
+const char *MQTT_TOPIC_RESET = "ti/1.4/b1/TheWulfAndThreePigs/reset";
+const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/clear_blow";
 
 // Locking
-const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs";
+const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/TheWulfAndThreePigs";
 const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
 
 // Allow blowing
-const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/next";
+const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
 
 // pinnumber for house servo's
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
 
-const int SERVO_HOUSE_1_PIN = 33;
-const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/house/1";
+const int SERVO_HOUSE_1_PIN = 23;
+const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/TheWulfAndThreePigs/house/1";
 
-const int SERVO_HOUSE_2_PIN = 4;
-const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/house/2";
+const int SERVO_HOUSE_2_PIN = 33;
+const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/TheWulfAndThreePigs/house/2";
 
-const int SERVO_HOUSE_3_PIN = 19;
-const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/house/3";
+const int SERVO_HOUSE_3_PIN = 32;
+const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/TheWulfAndThreePigs/house/3";
 
 // constants for button
 const int BUTTON1_PIN = 2;
-const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/startBtn";
+const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/TheWulfAndThreePigs/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 200;
-const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
-const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
+const float BLOW_TOTAL_COMPLETE = 65;
+const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/TheWulfAndThreePigs/blower/speed";
+const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/TheWulfAndThreePigs/blower/total";
 
 // Setting the pins for the LED's
 const int NR_OF_LEDS = 3;
@@ -51,13 +52,13 @@ const int LINE_LENGTH = 4;
 
 // Zelf instellen voor je eigen WLAN
 
-// Wifi Jesse
-//const char *WLAN_SSID = "Ziggo89DC852";
-//const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+//Wifi Jesse
+const char *WLAN_SSID = "Ziggo89DC852";
+const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
 
-// Wifi school laptop Jesse
-const char *WLAN_SSID = "ESP_WIFI_B1";
-const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
+//// Wifi school laptop Jesse
+//const char *WLAN_SSID = "ESP_WIFI_B1";
+//const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
 // CLIENT_ID moet uniek zijn, dus zelf aanpassen (willekeurige letters en cijfers)
 const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
@@ -81,11 +82,15 @@ PubSubClient mqttClient(wifiClient);
 
 
 // lock variables
-int lock;
+int lock = 0;
 
 // Servo controls
 Servo servoHouse1;
+boolean house1up = true;
+
 Servo servoHouse2;
+boolean house2up = true;
+
 Servo servoHouse3;
 
 // Led controls
@@ -99,7 +104,8 @@ int totalBlowPercent = 0;
 // button pressed
 bool button1PressedPrev = false;
 
-bool allowBlow = true;
+bool allowBlow = false;
+int timer = 0;
 
 /*
  * Resets all the value's
@@ -109,9 +115,29 @@ void reset()
   currentBlow = 0;
   totalBlowPercent = 0;
 
+  house1up = true;
+  house2up = true;
+
+  // Reseting first servo 1
+  servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse1.write(SERVO_UP);
+  delay(250); 
+  servoHouse1.detach();
+    
+  // Reseting first servo 2
+  servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse2.write(SERVO_UP);
+  delay(250); 
+  servoHouse2.detach();
+  
+  // Reseting first servo 3
+  servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse3.write(SERVO_UP);
+  delay(250); 
+  servoHouse3.detach();
 
   ledIntensities[0] = 255;
   ledIntensities[1] = 255;
@@ -154,6 +180,15 @@ void handleBlower()
   // updating percentage blow
   int percent = ((newBlow / BLOW_TOTAL_COMPLETE) * 100);
   if (percent != 0) {
+    if(house1up) {
+      shakeHouse(servoHouse1, SERVO_HOUSE_1_PIN);
+    } else if (house2up) {
+      shakeHouse(servoHouse2, SERVO_HOUSE_2_PIN);
+    } else {
+      shakeHouse(servoHouse3, SERVO_HOUSE_3_PIN);
+    }
+    
+    
     totalBlowPercent += percent;
     char payloadPer[10];
     sprintf(payloadPer, "%d", totalBlowPercent);
@@ -163,6 +198,7 @@ void handleBlower()
     Serial.println(payloadPer);
     Serial.println(totalBlowPercent);  
   }
+
 
   currentBlow = newBlow;
 }
@@ -197,6 +233,25 @@ void handleLED()
   setLedIntensity(2, ledIntensities[2]);
 }
 
+void clearBlow(){
+  totalBlowPercent = 0;
+    char payloadPer[10];
+    sprintf(payloadPer, "%d", totalBlowPercent);
+    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
+}
+
+void shakeHouse(Servo servo, int MQTT_TOPIC)  {
+    servo.setPeriodHertz(50); // standard 50 hz servo
+    servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
+    servo.write(195);
+    delay(150);
+    servo.write(165);
+    delay(150);
+    servo.write(180);
+    delay(150);  
+    servo.detach();
+}
+
 /*
  * De MQTT client callback die wordt aangeroepen bij elk bericht dat
  * we van de MQTT broker ontvangen
@@ -211,32 +266,40 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
 
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0)
   {
+    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse1.write(SERVO_DOWN);
+    delay(250); 
+    servoHouse1.detach();
+    house1up = false;
+    clearBlow();
+    allowBlow = false;
   }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
   {
+    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse2.write(SERVO_DOWN);
+    delay(250); 
+    servoHouse2.detach();
+    house2up = false;
+    clearBlow();
+    allowBlow = false;
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
-    servoHouse3.write(SERVO_DOWN);
+    for (int i = 0; i < 5; i++){
+       shakeHouse(servoHouse3, SERVO_HOUSE_3_PIN);
+       delay(500);
+    }
+   
   }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
   {
     reset();
   }else if (strcmp(topic, MQTT_TOPIC_START_BLOW) == 0)
   {
-    char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
-    byte value; // Hierin komt de getalwaarde na conversie
-    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
-    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
-    strncpy(validPayload, (const char *) payload, length > 16 ? 16 : length);
-    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
-    sscanf((const char *) validPayload, "%u", &value);
-   
-    if(value == 0) {
-      allowBlow = false;
-    } else {
-      allowBlow = true;
-    }
+    allowBlow = true;
+    clearBlow();
+    
   }else if (strcmp(topic, MQTT_TOPIC_LOCK) == 0)
   {
     char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
@@ -248,6 +311,10 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     sscanf((const char *) validPayload, "%u", &value);
     
     lock = value;
+    if (lock == 1) {
+      lock = 2;
+      timer = 0;
+    }
     Serial.println(lock);
   }
   else if (strcmp(topic, MQTT_TOPIC_LOCK_PING) == 0)
@@ -263,9 +330,12 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     char payloadQ[10];
     sprintf(payloadQ, "%d", lock);
 
-    Serial.println("tetst ogof");
+    Serial.println("lock ping, send: ");
     Serial.println(lock);
     mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+  }else if (strcmp(topic, MQTT_TOPIC_CLEAR_BLOW) == 0)
+  {
+    clearBlow();
   }
 }
 
@@ -290,6 +360,27 @@ void setup()
     ledcSetup(LED_CHANNELS[led], 12000, 8); // 12 kHz PWM, 8-bit resolutie
     ledcWrite(LED_CHANNELS[led], ledIntensities[led]);
   }
+
+    // correctly setting servo 1
+    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse1.write(SERVO_UP);
+    delay(100); 
+    servoHouse1.detach();
+
+    // Correctly setting servo 2
+    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse2.write(SERVO_UP);
+    delay(100); 
+    servoHouse2.detach();
+
+    // Correctly setting servo 3
+    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse3.write(SERVO_UP);
+    delay(100); 
+    servoHouse3.detach();
 
   // Open de verbinding naar de seriële terminal
   Serial.begin(115200);
@@ -410,29 +501,24 @@ void setup()
     Serial.print("Subscribed to topic ");
     Serial.println(MQTT_TOPIC_RESET);
   }
-}
 
+  // Subscribe op de MQTT_TOPIC_CLEAR_BLOW
+  if (!mqttClient.subscribe(MQTT_TOPIC_CLEAR_BLOW, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
+  }
+}
 
 void loop()
 {
   // Nodig om de MQTT client zijn werk te laten doen
   mqttClient.loop();
-  
-  if (!servoHouse1.attached()) {
-    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse1.write(SERVO_UP);
-  }
-  if (!servoHouse2.attached()) {
-    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse2.write(SERVO_UP);
-  }
-  if (!servoHouse3.attached()) {
-    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse3.write(SERVO_UP);
-  }
 
   // Handle blower
   if(allowBlow == true) 
@@ -443,18 +529,43 @@ void loop()
   // Handle LEDs
   handleLED();
 
+  if(timer >= 30000){
+    lock = 2;
+
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("timer expired, lock reset: ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+
+    timer = 0;
+  }
+
   // Controleer of een knop is ingedrukt en handel dat af
-  bool button1PressedNow = !digitalRead(BUTTON1_PIN);\
-  if (button1PressedNow && !button1PressedPrev) {
+  bool button1PressedNow = !digitalRead(BUTTON1_PIN);  
+if (button1PressedNow && !button1PressedPrev && lock == 2) {
     // Handel knopdruk af
-    //Serial.println("Knop 1 ingedrukt");
-    mqttClient.publish(MQTT_TOPIC_BUTTON1, "Pressed");
+    lock = 0;
+    
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("lock state now is lifted ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   }
   button1PressedPrev = button1PressedNow;
   
   // Laat de ingebouwde LED knipperen
   ledIsOn = !ledIsOn;
   digitalWrite(LED_BUILTIN, ledIsOn);
-  
+
+  if(lock == 0) {
+    timer += 150;
+
+    Serial.print("timer now is at: ");
+    Serial.println(timer);
+  }
   delay(100);
 }
