@@ -104,7 +104,7 @@ int totalBlowPercent = 0;
 // button pressed
 bool button1PressedPrev = false;
 
-bool allowBlow = true;
+bool allowBlow = false;
 
 /*
  * Resets all the value's
@@ -270,6 +270,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     servoHouse1.detach();
     house1up = false;
     clearBlow();
+    allowBlow = false;
   }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
   {
     servoHouse2.setPeriodHertz(50); // standard 50 hz servo
@@ -279,6 +280,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     servoHouse2.detach();
     house2up = false;
     clearBlow();
+    allowBlow = false;
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
