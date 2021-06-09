@@ -2,9 +2,6 @@
 <layout>
 
     <data>
-
-        <import type="android.R" />
-
         <variable
             name="data"
             type="com.example.mobapp.Fairytale" />
@@ -14,19 +11,62 @@
             type="com.example.mobapp.FairyTaleInspection" />
     </data>
 
+        <import type="android.R" />
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/inspector_constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".FairyTaleInspection">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/fairy_tale_top_border"
-            app:Activity="@{Activity}" />
+        <variable
+            name="data"
+            type="com.example.mobapp.Fairytale" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:background="@drawable/gradient"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:showIn="@layout/activity_fairy_tale_inspection">
 
+        <variable
+            name="Activity"
+            type="com.example.mobapp.FairyTaleInspection" />
+    </data>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@{data.name}"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="@{() -> Activity.popup()}"
+                android:background="@drawable/butten_rounding_white"
+                android:text="Stop sprookje"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="@id/topBar"
+                />
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -37,6 +77,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <ImageView
             android:id="@+id/fairytaleImageView"
             android:layout_width="match_parent"

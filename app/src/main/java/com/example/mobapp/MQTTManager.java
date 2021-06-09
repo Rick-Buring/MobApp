@@ -124,19 +124,19 @@ public class MQTTManager {
     }
 
     public void publishMessage(String topic, String msg) {
-        byte[] encodedPayload = new byte[0];
         try {
             // Convert the message to a UTF-8 encoded byte array
-            encodedPayload = msg.getBytes("UTF-8");
             // Store it in an MqttMessage
+            byte[] encodedPayload = msg.getBytes("UTF-8");
             MqttMessage message = new MqttMessage(encodedPayload);
+
             // Set parameters for the message
             message.setQos(QUALITY_OF_SERVICE);
             message.setRetained(false);
             // Publish the message via the MQTT broker
             this.mqttAndroidClient.publish(topic, message);
             Log.d(LOGTAG, "publishMessage: " + message);
-        } catch (UnsupportedEncodingException | MqttException e) {
+        } catch (MqttException | UnsupportedEncodingException e) {
             Log.e(LOGTAG, "MQTT exception while publishing topic to MQTT broker, msg: " + e.getMessage() +
                     ", cause: " + e.getCause());
             e.printStackTrace();

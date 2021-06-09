@@ -1,6 +1,7 @@
 package com.example.mobapp;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ViewFlipper;
@@ -71,7 +72,13 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "true");
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "0");
         this.finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

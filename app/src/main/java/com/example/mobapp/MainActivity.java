@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
             manager.subscribeToTopic(topicLocation + tale.getTopic());
         }
 
-        manager.publishMessage(topicLocation + "request", "request availability");
+        manager.publishMessage(topicLocation + "request", " ");
     }
 
     @Override
@@ -50,9 +50,16 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "false");
+        MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
         Intent intent = new Intent(this, FairyTaleInspection.class);
         intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }
