@@ -19,7 +19,37 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
     private final String description;
     private final int image;
     private int step;
-    public ArrayList<Integer> views;
+    public ArrayList<fairytaleStepView> views;
+
+    public class fairytaleStepView{
+        private final Integer view;
+        private final int text;
+        private final Class<?> bindClass;
+
+        public fairytaleStepView(Integer view, Class<?> bindClass) {
+            this.view = view;
+            this.bindClass = bindClass;
+            this.text = R.string.blaas;
+        }
+
+        public fairytaleStepView(Integer view, int text, Class<?> bindClass) {
+            this.view = view;
+            this.text = text;
+            this.bindClass = bindClass;
+        }
+
+        public Integer getView() {
+            return view;
+        }
+
+        public int getText() {
+            return text;
+        }
+
+        public Class getBindClass() {
+            return bindClass;
+        }
+    }
 
     @Bindable
     public boolean isClickable() {
@@ -28,7 +58,6 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
 
     private boolean clickable;
 
-    private int color;
 
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
         this.name = name;
@@ -38,16 +67,17 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         this.image = image;
         this.step = 0;
         this.topic = topic;
-        this.color = R.color.transparent;
         this.clickable = true;
         this.views = new ArrayList<>();
     }
 
     @Bindable
-    public abstract int getText();
+    public int getText(){
+     return this.views.get(this.step).getText();
+    }
 
     public void nextStep() {
-        if (step >= views.size())
+        if (step + 1 >= views.size())
             step = 0;
         else
             step++;
@@ -57,18 +87,9 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public int getColor() {
-        return this.color;
-    }
-
-    public int getStepInt() {
-        return this.step;
-    }
-
-    @Bindable
     public String getStepString() {
         //todo make a not hardcoded string
-        return "stap: " + (step );
+        return "stap: " + (step + 1);
     }
 
     @Bindable
@@ -111,6 +132,13 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.clickable);
     }
 
+    private String feedback = "";
+
+    @Bindable
+    public String getFeedback() {
+        return feedback;
+    }
+
     public void MessageReceived(MqttMessage message) {
         Log.d("TAG", "MessageReceived: " + message);
         if (message.toString().equals("true")) {
@@ -118,6 +146,11 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         } else if (message.toString().equals("false")) {
             setClickable(false);
         }
+        if(message.toString().startsWith("feedback: ")){
+            feedback = message.toString().replace("feedback: ", "");
+            notifyPropertyChanged(BR.feedback);
+        }
+
     }
 
 

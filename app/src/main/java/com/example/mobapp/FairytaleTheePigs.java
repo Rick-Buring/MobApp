@@ -1,10 +1,9 @@
 package com.example.mobapp;
 
-import java.util.ArrayList;
+import com.example.mobapp.databinding.StoryBlowLayoutBinding;
+import com.example.mobapp.databinding.StoryLayoutBinding;
 
 public class FairytaleTheePigs extends Fairytale {
-
-    private ArrayList<Integer> strings;
 
     public FairytaleTheePigs() {
         super("The wulf and the three pigs",
@@ -13,24 +12,21 @@ public class FairytaleTheePigs extends Fairytale {
                 "A nice tale", R.drawable.fairytale_grotebozewolf3,
                 "ti/1.4/b1/availability/TheWulfAndThreePigs");
 
-        views.add(R.layout.story_layout);
-        views.add(R.layout.story_layout);
-        views.add(R.layout.story_layout);
-        views.add(R.layout.story_layout);
-        views.add(R.layout.story_layout);
-        views.add(R.layout.story_layout);
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_1, StoryLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_2, StoryLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_3, StoryLayoutBinding.class));
 
-        this.strings = new ArrayList<>();
-        this.strings.add(R.string.fairytale_page_1);
-        this.strings.add(R.string.fairytale_page_2);
-        this.strings.add(R.string.fairytale_page_3);
-        this.strings.add(R.string.fairytale_page_4);
-        this.strings.add(R.string.fairytale_page_5);
-        this.strings.add(R.string.fairytale_page_6);
-    }
+        views.add(new fairytaleStepView(R.layout.story_blow_layout, StoryBlowLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_4, StoryLayoutBinding.class));
 
-    @Override
-    public int getText() {
-        return this.strings.get(super.getStepInt());
+        views.add(new fairytaleStepView(R.layout.story_blow_layout, StoryBlowLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_5, StoryLayoutBinding.class));
+
+        views.add(new fairytaleStepView(R.layout.story_blow_layout, StoryBlowLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_6, StoryLayoutBinding.class));
+        views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_7, StoryLayoutBinding.class));
+
     }
+    
+
 }

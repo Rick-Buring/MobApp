@@ -5,11 +5,13 @@
     <string name="fairytale_page_2">Peter wants his two brothers to come and play too, but that one are still building their houses. The second piglet, Patty, makes his wooden house. It looks nice but is it sturdy enough is to protect him from the wolf? Patty actually liked it and also prefers to play with his brother. The third piglet, Penny, is the smartest and makes his house of stone with sturdy windows and doors.</string>
     <string name="fairytale_page_3">Only after the first two piglets have played all day is it third piglet, Penny, finished building his house. This was just in time for they already hear a roar and see the big bad wolf coming! Quick flight all three little pigs into their own house. Like the wolf at the houses he is the first to go to Peter\'s house made of twigs and straw.</string>
     <string name="fairytale_page_4">The house fell over! Fortunately, the piglet just managed to escape and he ran into his brother Patty\'s house. This wooden house is luckily slightly sturdier than the straw house. They think safe here but when the wolf is at their door they still get nervous. The wolf also tries to blow this house down.</string>
-    <string name="fairytale_page_5">With a strong wind, the wolf also completely blows this house over! In shock Peter and Patty run to their smartest brother. Here they hide together in the Penny\'s stone house for the bad wolf. With all the strength the wolf has he also tries to blow this house down, but no matter how hard he coughs and cheers, the house remains firm. The wolf was angry because it wasn\'t him managed to get hold of the piglets and left again.</string>
-    <string name="fairytale_page_6">The two lazy pigs were shocked after today and decided to make a sturdy new home together with their smart brother. This will take then longer, but because of this they never suffered from the wolf again and they lived happily ever after.</string>
+    <string name="fairytale_page_5">With a strong wind, the wolf also completely blows this house over! In shock Peter and Patty run to their smartest brother. Here they hide together in the Penny\'s stone house for the bad wolf. With all the strength the wolf has he also tries to blow this house down</string>
+    <string name="fairytale_page_6">No matter how hard he coughs and cheers, the house remains firm. The wolf was angry because it wasn\'t him managed to get hold of the piglets and left again.</string>
+    <string name="fairytale_page_7">The two lazy pigs were shocked after today and decided to make a sturdy new home together with their smart brother. This will take then longer, but because of this they never suffered from the wolf again and they lived happily ever after.</string>
     <string name="volgende_stap">Next step</string>
     <string name="start_fairy_popup">Are you sure you want to start this fairy tale?</string>
     <string name="quit_fairy_popup">Are you sure you want to quit the fairy tale?</string>
+    <string name="blaas">Blow in the meter</string>
 
 
 </resources>

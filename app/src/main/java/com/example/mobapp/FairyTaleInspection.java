@@ -7,8 +7,7 @@ import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-
-import com.example.mobapp.databinding.StoryLayoutBinding;
+import androidx.databinding.ViewDataBinding;
 
 
 public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction {
@@ -31,11 +30,14 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
 
         this.viewFlipper = findViewById(R.id.flipper);
-        fairytale.views.forEach(view -> {
-            View inflatedView = LayoutInflater.from(this).inflate(view, null);
+        fairytale.views.forEach(fairytaleStep -> {
+            View inflatedView = LayoutInflater.from(this).inflate(fairytaleStep.getView(), null);
 
-            StoryLayoutBinding viewBinding = StoryLayoutBinding.bind(inflatedView);
-            viewBinding.setData(fairytale);
+            ViewDataBinding bind = DataBindingUtil.bind(inflatedView);
+            if (bind != null) {
+                bind.setVariable(BR.data, fairytale);
+                bind.executePendingBindings();
+            }
 
             this.viewFlipper.addView(inflatedView);
         });
