@@ -92,6 +92,7 @@
             android:id="@+id/flipper"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="16dp"
             app:layout_constraintTop_toBottomOf="@id/fairytaleImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
