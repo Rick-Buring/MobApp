@@ -1,6 +1,5 @@
 package com.example.mobapp;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.databinding.BaseObservable;
@@ -11,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Fairytale extends BaseObservable implements Serializable {
+public abstract class Fairytale extends BaseObservable implements Serializable {
 
     private final String topic;
     private final String name;
@@ -44,17 +43,17 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.views = new ArrayList<>();
     }
 
-    public void nextStep(Context context) {
-        if(step + 1 > views.size())
-            step = 0;
-        step++;
-        //todo update variable
-        notifyPropertyChanged(BR.step);
-    }
+    @Bindable
+    public abstract int getText();
 
-    private void setColor(int color) {
-        this.color = color;
-        notifyPropertyChanged(BR.color);
+    public void nextStep() {
+        if (step >= views.size())
+            step = 0;
+        else
+            step++;
+        //todo update variable
+        notifyPropertyChanged(BR.stepString);
+        notifyPropertyChanged(BR.text);
     }
 
     @Bindable
@@ -62,10 +61,14 @@ public class Fairytale extends BaseObservable implements Serializable {
         return this.color;
     }
 
+    public int getStepInt() {
+        return this.step;
+    }
+
     @Bindable
-    public String getStep() {
+    public String getStepString() {
         //todo make a not hardcoded string
-        return "stap: " + (step + 1);
+        return "stap: " + (step );
     }
 
     @Bindable
@@ -95,8 +98,8 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     public static Fairytale[] fairytales = new Fairytale[]{
             new FairytaleTheePigs(),
-            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+//            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
+//            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
     };
 
     public String getTopic() {
