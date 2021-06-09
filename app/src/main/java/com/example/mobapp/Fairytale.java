@@ -78,7 +78,10 @@ public class Fairytale extends BaseObservable implements Serializable {
             setClickable(true);
         } else if (message.toString().equals("1")) {
             setClickable(false);
-        } else {
+        } else if (message.toString().equals("2")){
+            setClickable(false);
+        }
+        else {
             feedback = message.toString();
             notifyPropertyChanged(BR.feedback);
         }
