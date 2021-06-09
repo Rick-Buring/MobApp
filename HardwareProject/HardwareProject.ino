@@ -9,8 +9,8 @@ const char *MQTT_TOPIC_RESET = "ti/1.4/b1/TheWulfAndThreePigs/reset";
 const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/clear_blow";
 
 // Locking
-const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs/TheWulfAndThreePigs";
-const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/TheWulfAndThreePigs/request";
+const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/TheWulfAndThreePigs";
+const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
 
 // Allow blowing
 const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
