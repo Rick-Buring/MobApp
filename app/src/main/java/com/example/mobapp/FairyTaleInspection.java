@@ -45,9 +45,13 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     }
 
     public void Next() {
-        fairytale.nextStep();
-        System.out.println(fairytale.getText());
-        viewFlipper.showNext();
+        if (fairytale.getStep() + 1 >= fairytale.views.size())
+            popup();
+        else {
+            fairytale.nextStep();
+            System.out.println(fairytale.getText());
+            viewFlipper.showNext();
+        }
     }
 
     public void popup() {

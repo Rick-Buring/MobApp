@@ -132,6 +132,10 @@ public class Fairytale extends BaseObservable implements Serializable {
         return this.topic;
     }
 
+    public int getStep() {
+        return this.step;
+    }
+
     //endregion
 
     public static Fairytale[] fairytales = new Fairytale[]{
