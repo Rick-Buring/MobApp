@@ -34,7 +34,7 @@ const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/TheWulfAndThreePigs/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 35;
+const float BLOW_TOTAL_COMPLETE = 65;
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/TheWulfAndThreePigs/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/TheWulfAndThreePigs/blower/total";
 
@@ -82,7 +82,7 @@ PubSubClient mqttClient(wifiClient);
 
 
 // lock variables
-int lock;
+int lock = 0;
 
 // Servo controls
 Servo servoHouse1;
@@ -105,6 +105,7 @@ int totalBlowPercent = 0;
 bool button1PressedPrev = false;
 
 bool allowBlow = false;
+int timer = 0;
 
 /*
  * Resets all the value's
@@ -242,10 +243,10 @@ void clearBlow(){
 void shakeHouse(Servo servo, int MQTT_TOPIC)  {
     servo.setPeriodHertz(50); // standard 50 hz servo
     servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
-    servo.write(190);
-    delay(100);
-    servo.write(170);
-    delay(100);
+    servo.write(195);
+    delay(150);
+    servo.write(165);
+    delay(150);
     servo.write(180);
     delay(150);  
     servo.detach();
@@ -310,6 +311,10 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     sscanf((const char *) validPayload, "%u", &value);
     
     lock = value;
+    if (lock == 1) {
+      lock = 2;
+      timer = 0;
+    }
     Serial.println(lock);
   }
   else if (strcmp(topic, MQTT_TOPIC_LOCK_PING) == 0)
@@ -325,7 +330,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     char payloadQ[10];
     sprintf(payloadQ, "%d", lock);
 
-    Serial.println("tetst ogof");
+    Serial.println("lock ping, send: ");
     Serial.println(lock);
     mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   }else if (strcmp(topic, MQTT_TOPIC_CLEAR_BLOW) == 0)
@@ -510,7 +515,6 @@ void setup()
   }
 }
 
-
 void loop()
 {
   // Nodig om de MQTT client zijn werk te laten doen
@@ -525,18 +529,43 @@ void loop()
   // Handle LEDs
   handleLED();
 
+  if(timer >= 30000){
+    lock = 2;
+
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("timer expired, lock reset: ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+
+    timer = 0;
+  }
+
   // Controleer of een knop is ingedrukt en handel dat af
-  bool button1PressedNow = !digitalRead(BUTTON1_PIN);\
-  if (button1PressedNow && !button1PressedPrev) {
+  bool button1PressedNow = !digitalRead(BUTTON1_PIN);  
+if (button1PressedNow && !button1PressedPrev && lock == 2) {
     // Handel knopdruk af
-    //Serial.println("Knop 1 ingedrukt");
-    mqttClient.publish(MQTT_TOPIC_BUTTON1, "Pressed");
+    lock = 0;
+    
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("lock state now is lifted ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   }
   button1PressedPrev = button1PressedNow;
   
   // Laat de ingebouwde LED knipperen
   ledIsOn = !ledIsOn;
   digitalWrite(LED_BUILTIN, ledIsOn);
-  
+
+  if(lock == 0) {
+    timer += 150;
+
+    Serial.print("timer now is at: ");
+    Serial.println(timer);
+  }
   delay(100);
 }
