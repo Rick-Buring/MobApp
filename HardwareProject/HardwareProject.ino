@@ -242,10 +242,12 @@ void clearBlow(){
 void shakeHouse(Servo servo, int MQTT_TOPIC)  {
     servo.setPeriodHertz(50); // standard 50 hz servo
     servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
-    servo.write(195);
-    delay(50);
-    servo.write(165);
-    delay(50);  
+    servo.write(200);
+    delay(100);
+    servo.write(160);
+    delay(100);
+    servo.write(180);
+    delay(100);  
     servo.detach();
 }
 
@@ -284,12 +286,11 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
-    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse3.write(SERVO_DOWN);
-    delay(250); 
-    servoHouse3.detach();
-    clearBlow();
+    for (int i = 0; i < 5; i++){
+       shakeHouse(servoHouse3, SERVO_HOUSE_3_PIN);
+       delay(500);
+    }
+   
   }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
   {
     reset();
