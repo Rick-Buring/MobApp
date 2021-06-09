@@ -18,13 +18,18 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
     private final String timeToComplete;
     private final String description;
     private final int image;
+
     private int step;
+    private boolean clickable;
+    private String feedback = "";
     public ArrayList<fairytaleStepView> views;
 
     public class fairytaleStepView{
+
         private final Integer view;
         private final int text;
         private final Class<?> bindClass;
+
 
         public fairytaleStepView(Integer view, Class<?> bindClass) {
             this.view = view;
@@ -45,19 +50,11 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         public int getText() {
             return text;
         }
-
         public Class getBindClass() {
             return bindClass;
         }
+
     }
-
-    @Bindable
-    public boolean isClickable() {
-        return clickable;
-    }
-
-    private boolean clickable;
-
 
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
         this.name = name;
@@ -71,19 +68,28 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         this.views = new ArrayList<>();
     }
 
-    @Bindable
-    public int getText(){
-     return this.views.get(this.step).getText();
-    }
-
     public void nextStep() {
         if (step + 1 >= views.size())
             step = 0;
         else
             step++;
-        //todo update variable
+
+        MQTTManager.getManager().publishMessage(topic + "/step", String.valueOf(step));
+
         notifyPropertyChanged(BR.stepString);
         notifyPropertyChanged(BR.text);
+    }
+
+    //region getters
+
+    @Bindable
+    public boolean isClickable() {
+        return clickable;
+    }
+
+    @Bindable
+    public int getText(){
+        return this.views.get(this.step).getText();
     }
 
     @Bindable
@@ -117,26 +123,26 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
         return description;
     }
 
+    @Bindable
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public String getTopic() {
+        return this.topic;
+    }
+
+    //endregion
+
     public static Fairytale[] fairytales = new Fairytale[]{
             new FairytaleTheePigs(),
 //            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
 //            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
     };
 
-    public String getTopic() {
-        return this.topic;
-    }
-
     private void setClickable(boolean clickable) {
         this.clickable = clickable;
         notifyPropertyChanged(BR.clickable);
-    }
-
-    private String feedback = "";
-
-    @Bindable
-    public String getFeedback() {
-        return feedback;
     }
 
     public void MessageReceived(MqttMessage message) {
