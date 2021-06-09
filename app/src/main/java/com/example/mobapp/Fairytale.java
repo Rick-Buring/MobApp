@@ -12,14 +12,14 @@ import java.util.ArrayList;
 
 public class Fairytale extends BaseObservable implements Serializable {
 
-    private final String topic;
     private final String name;
     private final String location;
     private final String timeToComplete;
     private final String description;
-    private final int image;
+    private final String topic;
 
     private int step;
+    private final int image;
     private boolean clickable;
     private String feedback = "";
     public ArrayList<fairytaleStepView> views;
@@ -78,7 +78,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         else
             step++;
 
-        MQTTManager.getManager().publishMessage(topic + "/step", String.valueOf(step));
+        MQTTManager.getManager().publishMessage( MainActivity.topicLocation + topic + "/step", String.valueOf(step));
 
         notifyPropertyChanged(BR.step);
         notifyPropertyChanged(BR.text);
@@ -136,16 +136,15 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     public String getTopic() {
-        return this.topic;
+        return topic;
     }
-
 
     //endregion
 
     public static Fairytale[] fairytales = new Fairytale[]{
             new FairytaleTheePigs(),
-            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+            new Fairytale("Hansel And Gretel", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
+            new Fairytale("Cinderella", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
     };
 
     private void setClickable(boolean clickable) {

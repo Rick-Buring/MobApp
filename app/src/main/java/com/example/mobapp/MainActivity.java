@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.OnItemClickListener, ShowPopup.PopupAction {
 
-    public static final String topicLocation = "ti/1.4/b1/availability/";
+    public static final String topicLocation = "ti/1.4/b1/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +22,13 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         recyclerView.setAdapter(fairytaleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
         MQTTManager manager = MQTTManager.getManager();
 
         for (Fairytale tale: Fairytale.fairytales) {
-            manager.subscribeToTopic(topicLocation + tale.getTopic());
+            manager.subscribeToTopic(topicLocation + tale.getName());
         }
 
-        manager.publishMessage(topicLocation + "request", " ");
+        manager.publishMessage(topicLocation + "availability/request", " ");
     }
 
     @Override

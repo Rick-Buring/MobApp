@@ -73,7 +73,7 @@ public class MQTTManager {
         // Set up connection options for the connection to the MQTT broker
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
-        options.setCleanSession(false);
+        options.setCleanSession(true);
         options.setUserName(USERNAME);
         options.setPassword(PASSWORD.toCharArray());
         // Add more options if necessary
