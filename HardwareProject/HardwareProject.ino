@@ -6,6 +6,7 @@
 
 // Reset
 const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
+const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/clear_blow";
 
 // Locking
 const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs";
@@ -295,6 +296,12 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     Serial.println("tetst ogof");
     Serial.println(lock);
     mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+  }else if (strcmp(topic, MQTT_TOPIC_CLEAR_BLOW) == 0)
+  {
+    totalBlowPercent = 0;
+    char payloadPer[10];
+    sprintf(payloadPer, "%d", totalBlowPercent);
+    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
   }
 }
 
@@ -459,6 +466,18 @@ void setup()
   {
     Serial.print("Subscribed to topic ");
     Serial.println(MQTT_TOPIC_RESET);
+  }
+
+  // Subscribe op de MQTT_TOPIC_CLEAR_BLOW
+  if (!mqttClient.subscribe(MQTT_TOPIC_CLEAR_BLOW, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
   }
 }
 
