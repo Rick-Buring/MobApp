@@ -24,7 +24,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:foreground="@{data.clickable ? 0 : R.color.disabledColor}">
+            android:foreground="@{data.clickable ? 0 : 0xd0000000}">
 
             <ImageView
                 android:layout_width="0dp"
@@ -112,11 +112,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:rotation="-15"
             android:text="@{data.available}"
             android:textColor="@color/red"
             android:textSize="25sp"
             android:visibility="@{data.clickable ? View.GONE : View.VISIBLE}"
-            android:background="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
