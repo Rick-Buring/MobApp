@@ -19,7 +19,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String topic;
 
     private int step;
-    private final int image;
+    private int image;
     private boolean clickable;
     private String feedback = "";
     public ArrayList<fairytaleStepView> views;
