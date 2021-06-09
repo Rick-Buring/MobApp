@@ -1,7 +1,6 @@
 package com.example.mobapp;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ViewFlipper;
@@ -45,7 +44,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     }
 
     public void Next() {
-        if (fairytale.getStep() + 1 >= fairytale.views.size())
+        if (fairytale.getStep() + 1 >= fairytale.maxStep())
             popup();
         else {
             fairytale.nextStep();
@@ -71,6 +70,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     protected void onDestroy() {
+        this.fairytale.reset();
         super.onDestroy();
     }
 

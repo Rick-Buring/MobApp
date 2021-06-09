@@ -24,6 +24,10 @@ public class Fairytale extends BaseObservable implements Serializable {
     private String feedback = "";
     public ArrayList<fairytaleStepView> views;
 
+    public void reset() {
+        this.step = 0;
+    }
+
     public class fairytaleStepView{
 
         private final Integer view;
@@ -76,11 +80,15 @@ public class Fairytale extends BaseObservable implements Serializable {
 
         MQTTManager.getManager().publishMessage(topic + "/step", String.valueOf(step));
 
-        notifyPropertyChanged(BR.stepString);
+        notifyPropertyChanged(BR.step);
         notifyPropertyChanged(BR.text);
     }
 
     //region getters
+
+    public int maxStep(){
+        return this.views.size();
+    }
 
     @Bindable
     public boolean isClickable() {
@@ -90,12 +98,6 @@ public class Fairytale extends BaseObservable implements Serializable {
     @Bindable
     public int getText(){
         return this.views.get(this.step).getText();
-    }
-
-    @Bindable
-    public String getStepString() {
-        //todo make a not hardcoded string
-        return "stap: " + (step + 1);
     }
 
     @Bindable
@@ -124,6 +126,11 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
+    public int getStep() {
+        return this.step;
+    }
+
+    @Bindable
     public String getFeedback() {
         return feedback;
     }
@@ -132,9 +139,6 @@ public class Fairytale extends BaseObservable implements Serializable {
         return this.topic;
     }
 
-    public int getStep() {
-        return this.step;
-    }
 
     //endregion
 
