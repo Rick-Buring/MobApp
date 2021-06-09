@@ -34,7 +34,7 @@ const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/TheWulfAndThreePigs/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 200;
+const float BLOW_TOTAL_COMPLETE = 35;
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/TheWulfAndThreePigs/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/TheWulfAndThreePigs/blower/total";
 
@@ -242,12 +242,12 @@ void clearBlow(){
 void shakeHouse(Servo servo, int MQTT_TOPIC)  {
     servo.setPeriodHertz(50); // standard 50 hz servo
     servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
-    servo.write(200);
+    servo.write(190);
     delay(100);
-    servo.write(160);
+    servo.write(170);
     delay(100);
     servo.write(180);
-    delay(100);  
+    delay(150);  
     servo.detach();
 }
 
