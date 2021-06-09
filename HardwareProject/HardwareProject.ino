@@ -18,13 +18,13 @@ const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/next";
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
 
-const int SERVO_HOUSE_1_PIN = 33;
+const int SERVO_HOUSE_1_PIN = 23;
 const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/house/1";
 
-const int SERVO_HOUSE_2_PIN = 4;
+const int SERVO_HOUSE_2_PIN = 33;
 const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/house/2";
 
-const int SERVO_HOUSE_3_PIN = 19;
+const int SERVO_HOUSE_3_PIN = 32;
 const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/house/3";
 
 // constants for button
@@ -51,13 +51,13 @@ const int LINE_LENGTH = 4;
 
 // Zelf instellen voor je eigen WLAN
 
-// Wifi Jesse
-//const char *WLAN_SSID = "Ziggo89DC852";
-//const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+//Wifi Jesse
+const char *WLAN_SSID = "Ziggo89DC852";
+const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
 
-// Wifi school laptop Jesse
-const char *WLAN_SSID = "ESP_WIFI_B1";
-const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
+//// Wifi school laptop Jesse
+//const char *WLAN_SSID = "ESP_WIFI_B1";
+//const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
 // CLIENT_ID moet uniek zijn, dus zelf aanpassen (willekeurige letters en cijfers)
 const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
@@ -109,9 +109,26 @@ void reset()
   currentBlow = 0;
   totalBlowPercent = 0;
 
+  // Reseting first servo 1
+  servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse1.write(SERVO_UP);
+  delay(250); 
+  servoHouse1.detach();
+    
+  // Reseting first servo 2
+  servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse2.write(SERVO_UP);
+  delay(250); 
+  servoHouse2.detach();
+  
+  // Reseting first servo 3
+  servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+  servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
   servoHouse3.write(SERVO_UP);
+  delay(250); 
+  servoHouse3.detach();
 
   ledIntensities[0] = 255;
   ledIntensities[1] = 255;
@@ -211,14 +228,26 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
 
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0)
   {
+    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse1.write(SERVO_DOWN);
+    delay(250); 
+    servoHouse1.detach();
   }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
   {
+    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse2.write(SERVO_DOWN);
+    delay(250); 
+    servoHouse2.detach();
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
+    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
     servoHouse3.write(SERVO_DOWN);
+    delay(250); 
+    servoHouse3.detach();
   }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
   {
     reset();
@@ -290,6 +319,27 @@ void setup()
     ledcSetup(LED_CHANNELS[led], 12000, 8); // 12 kHz PWM, 8-bit resolutie
     ledcWrite(LED_CHANNELS[led], ledIntensities[led]);
   }
+
+    // correctly setting servo 1
+    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse1.write(SERVO_UP);
+    delay(100); 
+    servoHouse1.detach();
+
+    // Correctly setting servo 2
+    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse2.write(SERVO_UP);
+    delay(100); 
+    servoHouse2.detach();
+
+    // Correctly setting servo 3
+    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
+    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
+    servoHouse3.write(SERVO_UP);
+    delay(100); 
+    servoHouse3.detach();
 
   // Open de verbinding naar de seriële terminal
   Serial.begin(115200);
@@ -417,22 +467,6 @@ void loop()
 {
   // Nodig om de MQTT client zijn werk te laten doen
   mqttClient.loop();
-  
-  if (!servoHouse1.attached()) {
-    servoHouse1.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse1.write(SERVO_UP);
-  }
-  if (!servoHouse2.attached()) {
-    servoHouse2.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse2.write(SERVO_UP);
-  }
-  if (!servoHouse3.attached()) {
-    servoHouse3.setPeriodHertz(50); // standard 50 hz servo
-    servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400); // Attach the servo after it has been detatched
-    servoHouse3.write(SERVO_UP);
-  }
 
   // Handle blower
   if(allowBlow == true) 
