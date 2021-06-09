@@ -5,38 +5,38 @@
 #include <ESP32Servo.h>
 
 // Reset
-const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
-const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/clear_blow";
+const char *MQTT_TOPIC_RESET = "ti/1.4/b1/TheWulfAndThreePigs/reset";
+const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/clear_blow";
 
 // Locking
-const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs";
-const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
+const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs/TheWulfAndThreePigs";
+const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/TheWulfAndThreePigs/request";
 
 // Allow blowing
-const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/next";
+const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
 
 // pinnumber for house servo's
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
 
 const int SERVO_HOUSE_1_PIN = 23;
-const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/house/1";
+const char *MQTT_TOPIC_HOUSE1 = "ti/1.4/b1/TheWulfAndThreePigs/house/1";
 
 const int SERVO_HOUSE_2_PIN = 33;
-const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/house/2";
+const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/TheWulfAndThreePigs/house/2";
 
 const int SERVO_HOUSE_3_PIN = 32;
-const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/house/3";
+const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/TheWulfAndThreePigs/house/3";
 
 // constants for button
 const int BUTTON1_PIN = 2;
-const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/startBtn";
+const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/TheWulfAndThreePigs/startBtn";
 
 // pinnumber for blowreader
 const int BLOW_READER_PIN = 34;
 const float BLOW_TOTAL_COMPLETE = 200;
-const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/blower/speed";
-const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/blower/total";
+const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/TheWulfAndThreePigs/blower/speed";
+const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/TheWulfAndThreePigs/blower/total";
 
 // Setting the pins for the LED's
 const int NR_OF_LEDS = 3;
@@ -232,6 +232,13 @@ void handleLED()
   setLedIntensity(2, ledIntensities[2]);
 }
 
+void clearBlow(){
+  totalBlowPercent = 0;
+    char payloadPer[10];
+    sprintf(payloadPer, "%d", totalBlowPercent);
+    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
+}
+
 void shakeHouse(Servo servo, int MQTT_TOPIC)  {
     servo.setPeriodHertz(50); // standard 50 hz servo
     servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
@@ -262,6 +269,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     delay(250); 
     servoHouse1.detach();
     house1up = false;
+    clearBlow();
   }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
   {
     servoHouse2.setPeriodHertz(50); // standard 50 hz servo
@@ -270,6 +278,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     delay(250); 
     servoHouse2.detach();
     house2up = false;
+    clearBlow();
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
@@ -278,6 +287,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     servoHouse3.write(SERVO_DOWN);
     delay(250); 
     servoHouse3.detach();
+    clearBlow();
   }else if (strcmp(topic, MQTT_TOPIC_RESET) == 0)
   {
     reset();
@@ -327,10 +337,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   }else if (strcmp(topic, MQTT_TOPIC_CLEAR_BLOW) == 0)
   {
-    totalBlowPercent = 0;
-    char payloadPer[10];
-    sprintf(payloadPer, "%d", totalBlowPercent);
-    mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
+    clearBlow();
   }
 }
 
