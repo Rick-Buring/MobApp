@@ -24,6 +24,36 @@ public class FairytaleTheePigs extends Fairytale {
         views.add(new fairytaleStepView(R.layout.story_layout, R.string.fairytale_page_7));
 
     }
-    
 
+    @Override
+    public void subscribe() throws Exception {
+        MQTTManager.getManager().subscribeToTopic(MainActivity.topicLocation + this.getTopic() + "/blower/total" );
+    }
+
+    @Override
+    public void nextStep() {
+        setFeedback("");
+        notifyPropertyChanged(BR.text);
+        if (getStep() + 1 >= views.size())
+            setStep(0);
+        else
+            setStep(getStep() + 1);
+
+        switch (getStep()) {
+            case 3:
+            case 7:
+            case 5:
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                break;
+            case 4:
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/1", " ");
+                break;
+            case 6:
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/2", " ");
+                break;
+            case 8:
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/3", " ");
+                break;
+        }
+    }
 }

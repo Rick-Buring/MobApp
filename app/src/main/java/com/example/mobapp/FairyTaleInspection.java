@@ -24,6 +24,12 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
         fairytale = Fairytale.fairytales[id];
 
+        try {
+            fairytale.subscribe();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
         binding.setData(fairytale);
@@ -47,9 +53,13 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         if (fairytale.getStep() + 1 >= fairytale.maxStep())
             popup();
         else {
-            fairytale.nextStep();
+            try {
+                fairytale.nextStep();
+                viewFlipper.showNext();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             System.out.println(fairytale.getText());
-            viewFlipper.showNext();
         }
     }
 
@@ -76,7 +86,8 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + Fairytale.fairytales[id].getTopic(), "0");
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic(), "0");
+        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic() + "/reset", " ");
         this.finish();
     }
 

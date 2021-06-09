@@ -28,7 +28,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.step = 0;
     }
 
-    public class fairytaleStepView{
+    public class fairytaleStepView {
 
         private final Integer view;
         private final int text;
@@ -62,27 +62,37 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.image = image;
         this.step = 0;
         this.topic = topic;
-        this.clickable = true;
+        this.clickable = false;
         this.views = new ArrayList<>();
     }
 
-    public void nextStep() {
-        if (step + 1 >= views.size())
-            step = 0;
-        else
-            step++;
+    public static Fairytale[] fairytales = new Fairytale[]{
+            new FairytaleTheePigs(),
+            new Fairytale("Hansel And Gretel", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
+            new Fairytale("Cinderella", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+    };
 
-        MQTTManager.getManager().publishMessage( MainActivity.topicLocation + topic + "/step", String.valueOf(step));
+    public void MessageReceived(MqttMessage message) {
+        Log.d("TAG", "MessageReceived: " + message);
+        if (message.toString().equals("0")) {
+            setClickable(true);
+        } else if (message.toString().equals("1")) {
+            setClickable(false);
+        } else {
+            feedback = message.toString();
+            notifyPropertyChanged(BR.feedback);
+        }
+    }
 
-        notifyPropertyChanged(BR.step);
-        notifyPropertyChanged(BR.text);
+    public void nextStep() throws Exception {
+        throw new Exception("Not implemented");
+    }
+
+    public void subscribe() throws Exception {
+        throw new Exception("Not implemented");
     }
 
     //region getters
-
-    public int maxStep(){
-        return this.views.size();
-    }
 
     @Bindable
     public boolean isClickable() {
@@ -90,7 +100,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public int getText(){
+    public int getText() {
         return this.views.get(this.step).getText();
     }
 
@@ -133,32 +143,23 @@ public class Fairytale extends BaseObservable implements Serializable {
         return topic;
     }
 
+    public int maxStep() {
+        return this.views.size();
+    }
     //endregion
-
-    public static Fairytale[] fairytales = new Fairytale[]{
-            new FairytaleTheePigs(),
-            new Fairytale("Hansel And Gretel", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-            new Fairytale("Cinderella", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
-    };
 
     private void setClickable(boolean clickable) {
         this.clickable = clickable;
         notifyPropertyChanged(BR.clickable);
     }
 
-    public void MessageReceived(MqttMessage message) {
-        Log.d("TAG", "MessageReceived: " + message);
-        if(message.toString().equals("0")){
-            setClickable(true);
-        }else if(message.toString().equals("1")){
-            setClickable(false);
-        }
-        if(message.toString().startsWith("feedback: ")){
-            feedback = message.toString().replace("feedback: ", "");
-            notifyPropertyChanged(BR.feedback);
-        }
-
+    public void setStep(int step) {
+        this.step = step;
+        notifyPropertyChanged(BR.step);
+        notifyPropertyChanged(BR.text);
     }
 
-
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
 }
