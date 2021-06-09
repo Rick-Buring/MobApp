@@ -86,7 +86,11 @@ int lock;
 
 // Servo controls
 Servo servoHouse1;
+boolean house1up = true;
+
 Servo servoHouse2;
+boolean house2up = true;
+
 Servo servoHouse3;
 
 // Led controls
@@ -109,6 +113,9 @@ void reset()
 {
   currentBlow = 0;
   totalBlowPercent = 0;
+
+  house1up = true;
+  house2up = true;
 
   // Reseting first servo 1
   servoHouse1.setPeriodHertz(50); // standard 50 hz servo
@@ -172,6 +179,15 @@ void handleBlower()
   // updating percentage blow
   int percent = ((newBlow / BLOW_TOTAL_COMPLETE) * 100);
   if (percent != 0) {
+    if(house1up) {
+      shakeHouse(servoHouse1, SERVO_HOUSE_1_PIN);
+    } else if (house2up) {
+      shakeHouse(servoHouse2, SERVO_HOUSE_2_PIN);
+    } else {
+      shakeHouse(servoHouse3, SERVO_HOUSE_3_PIN);
+    }
+    
+    
     totalBlowPercent += percent;
     char payloadPer[10];
     sprintf(payloadPer, "%d", totalBlowPercent);
@@ -181,6 +197,7 @@ void handleBlower()
     Serial.println(payloadPer);
     Serial.println(totalBlowPercent);  
   }
+
 
   currentBlow = newBlow;
 }
@@ -215,6 +232,16 @@ void handleLED()
   setLedIntensity(2, ledIntensities[2]);
 }
 
+void shakeHouse(Servo servo, int MQTT_TOPIC)  {
+    servo.setPeriodHertz(50); // standard 50 hz servo
+    servo.attach(MQTT_TOPIC, 500, 2400); // Attach the servo after it has been detatched
+    servo.write(195);
+    delay(50);
+    servo.write(165);
+    delay(50);  
+    servo.detach();
+}
+
 /*
  * De MQTT client callback die wordt aangeroepen bij elk bericht dat
  * we van de MQTT broker ontvangen
@@ -234,6 +261,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     servoHouse1.write(SERVO_DOWN);
     delay(250); 
     servoHouse1.detach();
+    house1up = false;
   }else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0)
   {
     servoHouse2.setPeriodHertz(50); // standard 50 hz servo
@@ -241,6 +269,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     servoHouse2.write(SERVO_DOWN);
     delay(250); 
     servoHouse2.detach();
+    house2up = false;
   }
   else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0)
   {
