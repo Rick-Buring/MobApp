@@ -2,11 +2,13 @@ package com.example.mobapp;
 
 import android.util.Log;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Fairytale extends BaseObservable implements Serializable {
 
@@ -16,16 +18,43 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String timeToComplete;
     private final String description;
     private final int image;
+
     private int step;
-
-    @Bindable
-    public boolean isClickable() {
-        return clickable;
-    }
-
     private boolean clickable;
+    private String feedback = "";
+    public ArrayList<fairytaleStepView> views;
 
-    private int color;
+    public class fairytaleStepView{
+
+        private final Integer view;
+        private final int text;
+        private final Class<?> bindClass;
+
+
+        public fairytaleStepView(Integer view, Class<?> bindClass) {
+            this.view = view;
+            this.bindClass = bindClass;
+            this.text = R.string.blaas;
+        }
+
+        public fairytaleStepView(Integer view, int text, Class<?> bindClass) {
+            this.view = view;
+            this.text = text;
+            this.bindClass = bindClass;
+        }
+
+        public Integer getView() {
+            return view;
+        }
+
+        public int getText() {
+            return text;
+        }
+        public Class getBindClass() {
+            return bindClass;
+        }
+
+    }
 
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
         this.name = name;
@@ -33,62 +62,83 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.timeToComplete = timeToComplete;
         this.description = description;
         this.image = image;
-        this.step = 1;
+        this.step = 0;
         this.topic = topic;
-        this.color = R.color.transparent;
         this.clickable = true;
+        this.views = new ArrayList<>();
     }
 
-    public void nextStep(){
-        step++;
-        //todo update variable
+    public void nextStep() {
+        if (step + 1 >= views.size())
+            step = 0;
+        else
+            step++;
 
-        notifyPropertyChanged(BR.step);
+        MQTTManager.getManager().publishMessage(topic + "/step", String.valueOf(step));
+
+        notifyPropertyChanged(BR.stepString);
+        notifyPropertyChanged(BR.text);
     }
 
-    private void setColor(int color){
-        this.color = color;
-        notifyPropertyChanged(BR.color);
+    //region getters
+
+    @Bindable
+    public boolean isClickable() {
+        return clickable;
     }
 
     @Bindable
-    public int getColor(){return this.color;}
+    public int getText(){
+        return this.views.get(this.step).getText();
+    }
 
     @Bindable
-    public String getStep() {
+    public String getStepString() {
         //todo make a not hardcoded string
-        return "stap: " + step;
+        return "stap: " + (step + 1);
     }
+
     @Bindable
     public int getImage() {
         return image;
     }
+
     @Bindable
     public String getName() {
         return name;
     }
+
     @Bindable
     public String getLocation() {
         return location;
     }
+
     @Bindable
     public String getTimeToComplete() {
         return timeToComplete;
     }
+
     @Bindable
     public String getDescription() {
         return description;
     }
 
-    public static Fairytale[] fairytales = new Fairytale[]{
-      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground,"TheWulfAndThreePigs"),
-      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-      new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
-    };
+    @Bindable
+    public String getFeedback() {
+        return feedback;
+    }
 
     public String getTopic() {
         return this.topic;
     }
+
+    //endregion
+
+    public static Fairytale[] fairytales = new Fairytale[]{
+            new FairytaleTheePigs(),
+            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
+            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+    };
 
     private void setClickable(boolean clickable) {
         this.clickable = clickable;
@@ -102,5 +152,12 @@ public class Fairytale extends BaseObservable implements Serializable {
         }else if(message.toString().equals("1")){
             setClickable(false);
         }
+        if(message.toString().startsWith("feedback: ")){
+            feedback = message.toString().replace("feedback: ", "");
+            notifyPropertyChanged(BR.feedback);
+        }
+
     }
+
+
 }

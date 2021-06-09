@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.R" />
+
         <variable
             name="data"
             type="com.example.mobapp.Fairytale" />
@@ -11,22 +14,18 @@
             type="com.example.mobapp.FairyTaleInspection" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".FairyTaleInspection">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/topBar"
-            android:layout_width="wrap_content"
-            android:layout_height="64dp"
-            android:background="@drawable/gradient"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:showIn="@layout/activity_fairy_tale_inspection">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:background="@drawable/gradient"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,77 +58,57 @@
                 android:background="@color/black"
                 app:layout_constraintBottom_toBottomOf="@id/topBar"
                 />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="@{data.step}"
+            android:text="@{data.stepString}"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topBar" />
+            app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
-        <LinearLayout
-            android:id="@+id/fairytaleLayout"
+        <ImageView
+            android:id="@+id/fairytaleImageView"
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-
             android:background="@drawable/blue_white_border"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
-
-
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="246dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/fairytale_biggetjeseind"
-            app:imageResource="@{data.image}" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/fairytaleTextTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:hint="@string/app_name"
-            android:text="@{data.name}"
-            android:textColorHint="@color/black"
-            android:textSize="26sp"
+            app:imageResource="@{data.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fairytaleLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            />
 
-        <TextView
+        <ViewFlipper
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:id="@+id/flipper"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:hint="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            android:text="@{data.description}"
-            android:textColorHint="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/fairytaleImageView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fairytaleTextTitle" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/nextStep"/>
+
 
         <Button
             android:id="@+id/nextStep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:onClick="@{() -> data.nextStep()}"
-            android:background="@drawable/butten_rounding_green"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/primary"
+            android:onClick="@{() -> Activity.Next()}"
             android:text="@string/volgende_stap"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

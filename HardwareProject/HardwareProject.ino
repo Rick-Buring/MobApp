@@ -7,6 +7,10 @@
 // Reset
 const char *MQTT_TOPIC_RESET = "ti/1.4/b1/reset";
 
+// Locking
+const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/availability/TheWulfAndThreePigs";
+const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
+
 // Allow blowing
 const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/next";
 
@@ -75,6 +79,9 @@ PubSubClient mqttClient(wifiClient);
 // ------------------------ //
 // DECALRATION OF VARIABLES //
 
+
+// lock variables
+int lock;
 
 // Servo controls
 Servo servoHouse1;
@@ -230,6 +237,35 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
     } else {
       allowBlow = true;
     }
+  }else if (strcmp(topic, MQTT_TOPIC_LOCK) == 0)
+  {
+    char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
+    byte value; // Hierin komt de getalwaarde na conversie
+    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
+    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
+    strncpy(validPayload, (const char *) payload, length > 16 ? 16 : length);
+    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
+    sscanf((const char *) validPayload, "%u", &value);
+    
+    lock = value;
+    Serial.println(lock);
+  }
+  else if (strcmp(topic, MQTT_TOPIC_LOCK_PING) == 0)
+  {
+    char validPayload[16]; // Tijdelijke buffer van 16 chars voor de payload
+    byte value; // Hierin komt de getalwaarde na conversie
+    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
+    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
+    strncpy(validPayload, (const char *) payload, length > 16 ? 16 : length);
+    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
+    sscanf((const char *) validPayload, "%u", &value);
+
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.println("tetst ogof");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   }
 }
 
@@ -341,6 +377,30 @@ void setup()
 
   // Subscribe op de start topic
   if (!mqttClient.subscribe(MQTT_TOPIC_START_BLOW, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+
+  // Subscribe op de MQTT_TOPIC_LOCK
+  if (!mqttClient.subscribe(MQTT_TOPIC_LOCK, MQTT_QOS))
+  {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+  else
+  {
+    Serial.print("Subscribed to topic ");
+    Serial.println(MQTT_TOPIC_RESET);
+  }
+
+  // Subscribe op de MQTT_TOPIC_LOCK_PING
+  if (!mqttClient.subscribe(MQTT_TOPIC_LOCK_PING, MQTT_QOS))
   {
     Serial.print("Failed to subscribe to topic ");
     Serial.println(MQTT_TOPIC_RESET);
