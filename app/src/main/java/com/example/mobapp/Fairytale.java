@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Fairytale extends BaseObservable implements Serializable {
+public class Fairytale extends BaseObservable implements Serializable {
 
     private final String topic;
     private final String name;
@@ -136,8 +136,8 @@ public abstract class Fairytale extends BaseObservable implements Serializable {
 
     public static Fairytale[] fairytales = new Fairytale[]{
             new FairytaleTheePigs(),
-//            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-//            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
+            new Fairytale("Test", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
     };
 
     private void setClickable(boolean clickable) {

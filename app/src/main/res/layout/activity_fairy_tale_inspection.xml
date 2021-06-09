@@ -1,41 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="data"
-            type="com.example.mobapp.Fairytale" />
-
-        <variable
-            name="Activity"
-            type="com.example.mobapp.FairyTaleInspection" />
-    </data>
-
         <import type="android.R" />
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".FairyTaleInspection">
 
         <variable
             name="data"
             type="com.example.mobapp.Fairytale" />
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/topBar"
-            android:layout_width="wrap_content"
-            android:layout_height="64dp"
-            android:background="@drawable/gradient"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:showIn="@layout/activity_fairy_tale_inspection">
 
         <variable
             name="Activity"
             type="com.example.mobapp.FairyTaleInspection" />
     </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:background="@drawable/gradient"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,6 +58,10 @@
                 android:background="@color/black"
                 app:layout_constraintBottom_toBottomOf="@id/topBar"
                 />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -75,9 +70,8 @@
             android:text="@{data.stepString}"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
         <ImageView
             android:id="@+id/fairytaleImageView"
             android:layout_width="match_parent"
@@ -89,7 +83,7 @@
             app:imageResource="@{data.image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
             />
 
         <ViewFlipper
