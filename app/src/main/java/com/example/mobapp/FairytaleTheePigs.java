@@ -41,7 +41,6 @@ public class FairytaleTheePigs extends Fairytale {
 
     @Override
     public void nextStep(viewFlipperCallback flipperCallback) {
-    public void nextStep() {
         if(locked && getFeedback() < 100)
             return;
         setFeedback(0);

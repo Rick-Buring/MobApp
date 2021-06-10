@@ -52,7 +52,7 @@ public class MQTTManager {
         if (manager == null)
             manager = this;
 
-        Log.i(LOGTAG, "The user id: " + this.UID)
+        Log.i(LOGTAG, "The user id: " + this.UID);
         // Show the automatically generated random client ID
         Log.i(LOGTAG, "Client ID (random) is " + CLIENT_ID);
         // Create the MQTT client, using the URL of the MQTT broker and the client ID
