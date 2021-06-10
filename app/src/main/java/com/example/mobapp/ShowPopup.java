@@ -8,8 +8,14 @@ import android.widget.PopupWindow;
 
 import com.example.mobapp.databinding.PopupWindowBinding;
 
+/**
+ * Shows a popup on the screen. The users can interact with the popup
+ */
 public class ShowPopup {
 
+    /**
+     * Inner interface to make the actions happen
+     */
     public interface PopupAction {
         void performAction();
     }
@@ -24,6 +30,15 @@ public class ShowPopup {
     private final PopupAction popupAction;
     private final View view;
 
+    /**
+     * Constructor for the ShowPopup
+     * @param message  The message to display on screen
+     * @param text1  The text on the first button
+     * @param text2  The text on the second button
+     * @param view  The view where the popups needs to show up on
+     * @param inflater  The inflater to create the popup
+     * @param popupAction  The acton performed by the popup
+     */
     public ShowPopup(String message, String text1, String text2, View view, LayoutInflater inflater, PopupAction popupAction) {
         this.message = message;
         this.text1 = text1;
@@ -33,6 +48,9 @@ public class ShowPopup {
         this.popupAction = popupAction;
     }
 
+    /**
+     * Starts the popup
+     */
     public void show() {
         // inflate the layout of the popup window
         View popupView = this.inflater.inflate(R.layout.popup_window, null);
@@ -57,23 +75,41 @@ public class ShowPopup {
         });
     }
 
+    /**
+     * Perform the action of the popup
+     */
     public void action() {
         this.popupAction.performAction();
         dismiss();
     }
 
+    /**
+     * Closes the popup
+     */
     public void dismiss() {
         popupWindow.dismiss();
     }
 
+    /**
+     * Getter for this.message
+     * @return  this.message
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Getter for this.text1
+     * @return  this.
+     */
     public String getText1() {
         return text1;
     }
 
+    /**
+     * Getter for this.text2
+     * @return  this.text2
+     */
     public String getText2() {
         return text2;
     }
