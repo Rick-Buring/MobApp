@@ -20,45 +20,53 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     private int available;
 
+    private boolean isStory;
+
     @Bindable
     public int getAvailable() {
         return available;
+    }
+
+    private int maxStep;
+
+    @Bindable
+    public int getMaxStep() {
+        return maxStep;
+    }
+
+    public void setMaxStep(int maxStep) {
+        this.maxStep = maxStep;
+        notifyPropertyChanged(BR.maxStep);
     }
 
     private int step;
     private int image;
     private boolean clickable;
     private String feedback = "";
-    public ArrayList<fairytaleStepView> views;
+    private int storyText;
+
+    @Bindable
+    public int getStoryText() {
+        return storyText;
+    }
+
+    public void setStoryText(int storyText) {
+        this.storyText = storyText;
+        notifyPropertyChanged(BR.storyText);
+    }
+
+    @Bindable
+    public boolean isStory() {
+        return isStory;
+    }
+
+    public void setStory(boolean story) {
+        isStory = story;
+        notifyPropertyChanged(BR.story);
+    }
 
     public void reset() {
         this.step = 0;
-    }
-
-    public class fairytaleStepView {
-
-        private final Integer view;
-        private final int text;
-
-
-        public fairytaleStepView(Integer view) {
-            this.view = view;
-            this.text = R.string.blaas;
-        }
-
-        public fairytaleStepView(Integer view, int text) {
-            this.view = view;
-            this.text = text;
-        }
-
-        public Integer getView() {
-            return view;
-        }
-
-        public int getText() {
-            return text;
-        }
-
     }
 
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
@@ -70,8 +78,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.step = 0;
         this.topic = topic;
         this.available = R.string.press_button;
-        this.clickable = false;
-        this.views = new ArrayList<>();
+        this.clickable = true;
     }
 
     public static Fairytale[] fairytales = new Fairytale[]{
@@ -114,11 +121,6 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public int getText() {
-        return this.views.get(this.step).getText();
-    }
-
-    @Bindable
     public int getImage() {
         return image;
     }
@@ -156,10 +158,6 @@ public class Fairytale extends BaseObservable implements Serializable {
     public String getTopic() {
         return topic;
     }
-
-    public int maxStep() {
-        return this.views.size();
-    }
     //endregion
 
     private void setClickable(boolean clickable) {
@@ -170,10 +168,10 @@ public class Fairytale extends BaseObservable implements Serializable {
     public void setStep(int step) {
         this.step = step;
         notifyPropertyChanged(BR.step);
-        notifyPropertyChanged(BR.text);
     }
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+        notifyPropertyChanged(BR.feedback);
     }
 }

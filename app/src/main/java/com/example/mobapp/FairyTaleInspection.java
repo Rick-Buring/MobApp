@@ -33,25 +33,10 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
         binding.setData(fairytale);
-
-        this.viewFlipper = findViewById(R.id.flipper);
-        viewFlipper.setInAnimation(this, R.anim.slide_in_right);
-        viewFlipper.setOutAnimation(this, R.anim.slide_out_left);
-        fairytale.views.forEach(fairytaleStep -> {
-            View inflatedView = LayoutInflater.from(this).inflate(fairytaleStep.getView(), null);
-
-            ViewDataBinding bind = DataBindingUtil.bind(inflatedView);
-            if (bind != null) {
-                bind.setVariable(BR.data, fairytale);
-                bind.executePendingBindings();
-            }
-
-            this.viewFlipper.addView(inflatedView);
-        });
     }
 
     public void Next() {
-        if (fairytale.getStep() + 1 >= fairytale.maxStep())
+        if (fairytale.getStep() + 1 >= fairytale.getMaxStep())
             popup();
         else {
             try {
@@ -60,7 +45,6 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println(fairytale.getText());
         }
     }
 
