@@ -39,6 +39,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         System.out.println("view : ");
         this.viewFlipper =  findViewById(R.id.fairytaleImageView);
 
+
     }
 
     public void Next() {
@@ -47,7 +48,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         else {
             try {
                 fairytale.nextStep();
-                viewFlipper.showNext();
+                viewFlipper.setDisplayedChild(fairytale.getIndex());
             } catch (Exception e) {
                 e.printStackTrace();
             }
