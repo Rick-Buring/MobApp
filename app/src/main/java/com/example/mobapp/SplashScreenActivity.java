@@ -15,12 +15,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         new MQTTManager(this);
 
-
-
         new Handler(Looper.getMainLooper()).postDelayed(()-> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             this.finish();
         }, 3000);
 
