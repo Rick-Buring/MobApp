@@ -112,6 +112,14 @@ bool button1PressedPrev = false;
 bool allowBlow = false;
 int timer = 0;
 
+void moveHouseServo(Servo house, int MQTT_TOPIC, int degree) {
+  house.setPeriodHertz(50);                    // standard 50 hz servo
+  house.attach(MQTT_TOPIC, 500, 2400);  // Attach the servo after it has been detatched
+  house.write(degree);
+  delay(200);
+  house.detach();
+}
+
 /*
  * Resets all the value's
  */
@@ -123,25 +131,13 @@ void reset() {
   house2up = true;
 
   // Reseting first servo 1
-  servoHouse1.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse1.write(SERVO_UP);
-  delay(250);
-  servoHouse1.detach();
+  moveHouseServo(servoHouse1, SERVO_HOUSE_1_PIN, SERVO_UP);
 
   // Reseting first servo 2
-  servoHouse2.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse2.write(SERVO_UP);
-  delay(250);
-  servoHouse2.detach();
+  moveHouseServo(servoHouse2, SERVO_HOUSE_2_PIN, SERVO_UP);
 
   // Reseting first servo 3
-  servoHouse3.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse3.write(SERVO_UP);
-  delay(250);
-  servoHouse3.detach();
+  moveHouseServo(servoHouse3, SERVO_HOUSE_3_PIN, SERVO_UP);
 
   ledIntensities[0] = 255;
   ledIntensities[1] = 255;
@@ -251,6 +247,18 @@ void shakeHouse(Servo servo, int MQTT_TOPIC) {
   servo.detach();
 }
 
+
+
+void subscribeToBroker(const char *topic) {
+  if (!mqttClient.subscribe(topic, MQTT_QOS)) {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(topic);
+  } else {
+    Serial.print("Subscribed to topic ");
+    Serial.println(topic);
+  }
+}
+
 /*
  * De MQTT client callback die wordt aangeroepen bij elk bericht dat
  * we van de MQTT broker ontvangen
@@ -261,20 +269,12 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   Serial.println(topic);
 
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0) {
-    servoHouse1.setPeriodHertz(50);                    // standard 50 hz servo
-    servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400);  // Attach the servo after it has been detatched
-    servoHouse1.write(SERVO_DOWN);
-    delay(250);
-    servoHouse1.detach();
+    moveHouseServo(servoHouse1, SERVO_HOUSE_1_PIN, SERVO_DOWN);
     house1up = false;
     clearBlow();
     allowBlow = false;
   } else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0) {
-    servoHouse2.setPeriodHertz(50);                    // standard 50 hz servo
-    servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400);  // Attach the servo after it has been detatched
-    servoHouse2.write(SERVO_DOWN);
-    delay(250);
-    servoHouse2.detach();
+    moveHouseServo(servoHouse2, SERVO_HOUSE_2_PIN, SERVO_DOWN);
     house2up = false;
     clearBlow();
     allowBlow = false;
@@ -356,16 +356,6 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   
 }
 
-void subscribeToBroker(const char *topic) {
-  if (!mqttClient.subscribe(topic, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(topic);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(topic);
-  }
-}
-
 void setup() {
   // Ingebouwde LED wordt als een soort keep-alive knipperLED gebruikt
   pinMode(LED_BUILTIN, OUTPUT);
@@ -386,26 +376,8 @@ void setup() {
     ledcWrite(LED_CHANNELS[led], ledIntensities[led]);
   }
 
-  // correctly setting servo 1
-  servoHouse1.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse1.attach(SERVO_HOUSE_1_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse1.write(SERVO_UP);
-  delay(100);
-  servoHouse1.detach();
-
-  // Correctly setting servo 2
-  servoHouse2.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse2.attach(SERVO_HOUSE_2_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse2.write(SERVO_UP);
-  delay(100);
-  servoHouse2.detach();
-
-  // Correctly setting servo 3
-  servoHouse3.setPeriodHertz(50);                    // standard 50 hz servo
-  servoHouse3.attach(SERVO_HOUSE_3_PIN, 500, 2400);  // Attach the servo after it has been detatched
-  servoHouse3.write(SERVO_UP);
-  delay(100);
-  servoHouse3.detach();
+  // Setting all servo's and value's in position
+  reset();
 
   // Open de verbinding naar de seriële terminal
   Serial.begin(115200);
