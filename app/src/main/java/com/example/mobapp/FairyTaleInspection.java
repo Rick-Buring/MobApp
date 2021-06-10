@@ -1,5 +1,6 @@
 package com.example.mobapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
         binding.setData(fairytale);
+        System.out.println("On create was called");
     }
 
     public void Next() {
@@ -49,7 +51,6 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     }
 
     public void popup() {
-
         new ShowPopup(getString(R.string.quit_fairy_popup),
                 "Ja",
                 "Nee",
@@ -66,9 +67,11 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     protected void onDestroy() {
+        System.out.println("resetting");
         this.fairytale.reset();
         super.onDestroy();
     }
+
 
     @Override
     public void performAction() {
@@ -79,7 +82,7 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void finish() {
-        super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        super.finish();
     }
 }

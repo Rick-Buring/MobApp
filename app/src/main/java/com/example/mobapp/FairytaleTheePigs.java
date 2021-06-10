@@ -23,11 +23,13 @@ public class FairytaleTheePigs extends Fairytale {
     public void nextStep() {
         setFeedback("");
         setStep(getStep() + 1);
+        System.out.println("Calling from reset: " + getStep());
 
         switch (getStep()) {
             case 0:
                 setStory(true);
                 setStoryText(R.string.fairytale_page_0);
+                break;
             case 1:
                 setStoryText(R.string.fairytale_page_1);
                 break;

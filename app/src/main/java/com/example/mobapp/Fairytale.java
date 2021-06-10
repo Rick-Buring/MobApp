@@ -69,7 +69,6 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.step = -1;
         try {
             nextStep();
-            notifyPropertyChanged(BR._all);
         } catch (Exception e) {
             e.printStackTrace();
         }
