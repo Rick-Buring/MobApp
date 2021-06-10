@@ -6,7 +6,7 @@ public class FairytaleTheePigs extends Fairytale {
         super("The wulf and the three pigs",
                 "At point 3 on map",
                 "3 minutes",
-                "A nice tale", R.drawable.fairytale_grotebozewolf3,
+                "A nice tale", R.drawable.fairytale_biggetjes,
                 "TheWulfAndThreePigs");
 
         setMaxStep(10);
