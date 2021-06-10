@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
         MQTTManager manager = MQTTManager.getManager();
 
-        for (Fairytale tale: Fairytale.fairytales) {
+        for (Fairytale tale : Fairytale.fairytales) {
             manager.subscribeToTopic(topicLocation + tale.getTopic());
         }
 
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     @Override
     public void onItemClick(int clickedPosition) {
-        if(!Fairytale.fairytales[clickedPosition].isClickable())
+        if (!Fairytale.fairytales[clickedPosition].isClickable())
             return;
         this.clickedPosition = clickedPosition;
-        new ShowPopup( getString(R.string.start_fairy_popup),
+        new ShowPopup(getString(R.string.start_fairy_popup),
                 "ja",
                 "nee",
                 new View(getApplicationContext()), getSystemService(LayoutInflater.class),
@@ -48,11 +48,13 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
-        Intent intent = new Intent(this, FairyTaleInspection.class);
-        intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        if (Fairytale.fairytales[clickedPosition].isClickable()) {
+            MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
+            Intent intent = new Intent(this, FairyTaleInspection.class);
+            intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     @Override

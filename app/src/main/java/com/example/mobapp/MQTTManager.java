@@ -28,7 +28,8 @@ public class MQTTManager {
     private static final String USERNAME = "ti";
     private static final String PASSWORD = "tiavans";
 
-    private static final String CLIENT_ID = "MobApp" + UUID.randomUUID().toString();
+    private static final UUID UID = UUID.randomUUID();
+    private static final String CLIENT_ID = "MobApp" + UID.toString();
     private static final int QUALITY_OF_SERVICE = 0;
 
     private final MqttAndroidClient mqttAndroidClient;
@@ -36,6 +37,7 @@ public class MQTTManager {
     public MQTTManager(Context context) {
         if (manager == null)
             manager = this;
+        System.out.println(UID);
         // Show the automatically generated random client ID
         Log.i(LOGTAG, "Client ID (random) is " + CLIENT_ID);
         // Create the MQTT client, using the URL of the MQTT broker and the client ID
