@@ -46,7 +46,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     public void reset() {
         this.step = -1;
         try {
-            nextStep();
+            nextStep(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,7 +125,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         }
     }
 
-    public void nextStep() throws Exception {
+    public void nextStep(viewFlipperCallback flipperCallback) throws Exception {
         throw new Exception("Not implemented");
     }
 

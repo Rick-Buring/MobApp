@@ -40,6 +40,7 @@ public class FairytaleTheePigs extends Fairytale {
     private boolean locked;
 
     @Override
+    public void nextStep(viewFlipperCallback flipperCallback) {
     public void nextStep() {
         if(locked && getFeedback() < 100)
             return;
@@ -51,25 +52,36 @@ public class FairytaleTheePigs extends Fairytale {
         notifyPropertyChanged(BR._all);
 
         switch (getStep()) {
+            case 2:
+                flipperCallback.flipperSkipOne();
+                break;
             case 3:
-            case 7:
-            case 5:
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
-                this.locked = true;
+                flipperCallback.flipperNext();
                 break;
             case 4:
+                flipperCallback.flipperNext();
                 this.locked = false;
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/1", " ");
+                break;
+                
+            case 5:
+                flipperCallback.flipperPrevious();
                 break;
             case 6:
                 this.locked = false;
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/2", " ");
+                flipperCallback.flipperNext();
+                break;
+            case 7:
+                flipperCallback.flipperPrevious();
                 break;
             case 8:
+                flipperCallback.flipperSkipOne();
                 this.locked = false;
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/3", " ");
                 break;
             case 9:
+                flipperCallback.flipperNext();
                 break;
         }
     }

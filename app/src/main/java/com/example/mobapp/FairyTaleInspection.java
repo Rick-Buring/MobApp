@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
 
-public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction {
+public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction, viewFlipperCallback {
 
     public static final String FAIRYTALE_ID = "FAIRYTALE_ID";
     private int id;
@@ -46,9 +46,9 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         if (fairytale.getStep() + 1 >= fairytale.getMaxStep())
             popup();
         else {
+
             try {
-                fairytale.nextStep();
-                viewFlipper.setDisplayedChild(fairytale.getIndex());
+                fairytale.nextStep(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -89,5 +89,20 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     public void finish() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         super.finish();
+    }
+
+    @Override
+    public void flipperNext() {
+        this.viewFlipper.showNext();
+    }
+
+    @Override
+    public void flipperPrevious() {
+        this.viewFlipper.showPrevious();
+    }
+
+    @Override
+    public void flipperSkipOne() {
+        this.viewFlipper.setDisplayedChild((this.viewFlipper.getDisplayedChild() + 2) % this.viewFlipper.getChildCount());
     }
 }
