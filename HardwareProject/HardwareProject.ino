@@ -4,13 +4,17 @@
 #include <PubSubClient.h>
 #include <ESP32Servo.h>
 
-// Reset
+/// CONST VARIABLES //
+
+// consts Reset and clearing
 const char *MQTT_TOPIC_RESET = "ti/1.4/b1/TheWulfAndThreePigs/reset";
 const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/clear_blow";
 
-// Locking
+// consts Locking
 const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/TheWulfAndThreePigs";
 const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
+
+const char *MQTT_TOPIC_APP_LASTWILL = "ti/1.4/b1/TheWulfAndThreePigs/lastwill";
 
 // Allow blowing
 const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
@@ -50,8 +54,6 @@ const int LINE_LENGTH = 4;
 // MQTT SETUP SETTINGS      //
 
 
-// Zelf instellen voor je eigen WLAN
-
 ////Wifi Jesse
 //const char *WLAN_SSID = "Ziggo89DC852";
 //const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
@@ -80,6 +82,9 @@ PubSubClient mqttClient(wifiClient);
 // ------------------------ //
 // DECALRATION OF VARIABLES //
 
+
+// non constant MQTT variable, for lastwil
+char *mqttLastWillTopic = "";
 
 // lock variables
 int lock = 0;
@@ -233,6 +238,7 @@ void clearBlow() {
   mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
 }
 
+
 void shakeHouse(Servo servo, int MQTT_TOPIC) {
   servo.setPeriodHertz(50);             // standard 50 hz servo
   servo.attach(MQTT_TOPIC, 500, 2400);  // Attach the servo after it has been detatched
@@ -253,8 +259,6 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   // Logging
   Serial.print("MQTT callback called for topic ");
   Serial.println(topic);
-  Serial.print("Payload length ");
-  Serial.println(length);
 
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0) {
     servoHouse1.setPeriodHertz(50);                    // standard 50 hz servo
@@ -301,12 +305,10 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     }
     Serial.println(lock);
   } else if (strcmp(topic, MQTT_TOPIC_LOCK_PING) == 0) {
-    char validPayload[16];  // Tijdelijke buffer van 16 chars voor de payload
-    byte value;             // Hierin komt de getalwaarde na conversie
-    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
-    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
+    char validPayload[16];
+    byte value;           
     strncpy(validPayload, (const char *)payload, length > 16 ? 16 : length);
-    // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
+   
     sscanf((const char *)validPayload, "%u", &value);
 
     char payloadQ[10];
@@ -317,6 +319,50 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
     mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
   } else if (strcmp(topic, MQTT_TOPIC_CLEAR_BLOW) == 0) {
     clearBlow();
+  } else if (strcmp(topic, MQTT_TOPIC_APP_LASTWILL) == 0) {
+    Serial.print("last will");
+    Serial.println(length);
+
+    char txt[length];
+    for (int i = 0; i < length + 1; i++) {
+      txt[i] = '\0'; 
+      }
+    strncpy(txt, (const char *) payload, length);
+
+    Serial.print("received lastwil: ");
+    Serial.println(txt);
+
+    char subText[] = "ti/1.4/b1/";
+    char dest[10 + length];
+
+    strcpy(dest, subText);
+    strcat(dest, txt);
+
+    mqttLastWillTopic = dest;
+    subscribeToBroker(mqttLastWillTopic);
+  } else if (strcmp(topic, mqttLastWillTopic) == 0) {
+    Serial.println("received last will, reseting");
+    reset();
+    lock = 2;
+
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("lock state now is lifted ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+  }
+
+  
+}
+
+void subscribeToBroker(const char *topic) {
+  if (!mqttClient.subscribe(topic, MQTT_QOS)) {
+    Serial.print("Failed to subscribe to topic ");
+    Serial.println(topic);
+  } else {
+    Serial.print("Subscribed to topic ");
+    Serial.println(topic);
   }
 }
 
@@ -394,76 +440,30 @@ void setup() {
   }
 
   // Subscribe op de house 1 topic
-  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE1, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE1);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE1);
-  }
-
+  subscribeToBroker(MQTT_TOPIC_HOUSE1);
+  
   // Subscribe op de house 2 topic
-  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE2, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE2);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE2);
-  }
+  subscribeToBroker(MQTT_TOPIC_HOUSE2);
 
   // Subscribe op de house 3 topic
-  if (!mqttClient.subscribe(MQTT_TOPIC_HOUSE3, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE3);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_HOUSE3);
-  }
+  subscribeToBroker(MQTT_TOPIC_HOUSE3);
 
   // Subscribe op de reset topic
-  if (!mqttClient.subscribe(MQTT_TOPIC_RESET, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  }
+  subscribeToBroker(MQTT_TOPIC_RESET);
 
   // Subscribe op de start topic
-  if (!mqttClient.subscribe(MQTT_TOPIC_START_BLOW, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  }
+  subscribeToBroker(MQTT_TOPIC_START_BLOW);
 
   // Subscribe op de MQTT_TOPIC_LOCK
-  if (!mqttClient.subscribe(MQTT_TOPIC_LOCK, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  }
+  subscribeToBroker(MQTT_TOPIC_LOCK);
 
   // Subscribe op de MQTT_TOPIC_LOCK_PING
-  if (!mqttClient.subscribe(MQTT_TOPIC_LOCK_PING, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_RESET);
-  }
+  subscribeToBroker(MQTT_TOPIC_LOCK_PING);
 
   // Subscribe op de MQTT_TOPIC_CLEAR_BLOW
-  if (!mqttClient.subscribe(MQTT_TOPIC_CLEAR_BLOW, MQTT_QOS)) {
-    Serial.print("Failed to subscribe to topic ");
-    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
-  } else {
-    Serial.print("Subscribed to topic ");
-    Serial.println(MQTT_TOPIC_CLEAR_BLOW);
-  }
+  subscribeToBroker(MQTT_TOPIC_CLEAR_BLOW);
+
+  subscribeToBroker(MQTT_TOPIC_APP_LASTWILL);
 }
 
 void loop() {
