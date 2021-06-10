@@ -25,6 +25,9 @@ public class FairytaleTheePigs extends Fairytale {
         setStep(getStep() + 1);
 
         switch (getStep()) {
+            case 0:
+                setStory(true);
+                setStoryText(R.string.fairytale_page_0);
             case 1:
                 setStoryText(R.string.fairytale_page_1);
                 break;
@@ -33,6 +36,7 @@ public class FairytaleTheePigs extends Fairytale {
                 break;
             case 3:
                 setStory(false);
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 break;
             case 4:
                 setStory(true);
@@ -50,6 +54,7 @@ public class FairytaleTheePigs extends Fairytale {
                 break;
             case 7:
                 setStory(false);
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 break;
             case 8:
                 setStory(true);

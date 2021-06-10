@@ -1,6 +1,7 @@
 package com.example.mobapp;
 
 import android.util.Log;
+import android.widget.ViewFlipper;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -17,7 +18,6 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String timeToComplete;
     private final String description;
     private final String topic;
-
     private int available;
 
     private boolean isStory;
@@ -66,7 +66,13 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     public void reset() {
-        this.step = 0;
+        this.step = -1;
+        try {
+            nextStep();
+            notifyPropertyChanged(BR._all);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
@@ -78,7 +84,8 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.step = 0;
         this.topic = topic;
         this.available = R.string.press_button;
-        this.clickable = true;
+        this.clickable = false;
+        this.setStory(true);
     }
 
     public static Fairytale[] fairytales = new Fairytale[]{
