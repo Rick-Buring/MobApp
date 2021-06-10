@@ -54,16 +54,23 @@ const int LINE_LENGTH = 4;
 // MQTT SETUP SETTINGS      //
 
 
-////Wifi Jesse
-//const char *WLAN_SSID = "Ziggo89DC852";
-//const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+// Zelf instellen voor je eigen WLAN
+
+// //Wifi Jesse
+// const char *WLAN_SSID = "Ziggo89DC852";
+// const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
 
 // Wifi school laptop Jesse
 const char *WLAN_SSID = "ESP_WIFI_B1";
 const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
+// Wifi max
+// const char *WLAN_SSID = "Peer";
+// const char *WLAN_ACCESS_KEY = "Welkom Niemand";
+
 // CLIENT_ID moet uniek zijn, dus zelf aanpassen (willekeurige letters en cijfers)
 const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
+//const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_Jasoniseenbitch69420";
 
 // Gegevens van de MQTT broker die we in TI-1.4 kunnen gebruiken
 const char *MQTT_BROKER_URL = "sendlab.nl";
@@ -194,32 +201,40 @@ void handleBlower() {
 
     Serial.print("blowing percentage changed: ");
     Serial.println(payloadPer);
-    Serial.println(totalBlowPercent);
+    Serial.println(totalBlowPercent);  
   }
 
 
   currentBlow = newBlow;
 }
 
-void handleLED() {
-  // clearing all LEDs
-  ledIntensities[0] = 255;
-  ledIntensities[1] = 255;
-  ledIntensities[2] = 255;
-
+void handleLED()
+{
   // Setting red LED
-  if (totalBlowPercent > 10) {
+  if (totalBlowPercent > 10) 
+  {
     ledIntensities[2] = 0;
+  } else
+  {
+    ledIntensities[2] = 255;
   }
 
   // Setting amber LED
-  if (totalBlowPercent > 50) {
+  if (totalBlowPercent > 50) 
+  {
     ledIntensities[1] = 0;
+  } else
+  {
+    ledIntensities[1] = 255;
   }
 
   // Setting green LED
-  if (totalBlowPercent > 100) {
+  if (totalBlowPercent > 100) 
+  {
     ledIntensities[0] = 0;
+  } else
+  {
+    ledIntensities[0] = 255;
   }
 
   setLedIntensity(0, ledIntensities[0]);
