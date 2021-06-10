@@ -56,6 +56,8 @@ public class FairytaleTheePigs extends Fairytale {
                 break;
             case 3:
                 flipperCallback.flipperNext();
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                this.locked = true;
                 break;
             case 4:
                 flipperCallback.flipperNext();
@@ -65,6 +67,8 @@ public class FairytaleTheePigs extends Fairytale {
                 
             case 5:
                 flipperCallback.flipperPrevious();
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                this.locked = true;
                 break;
             case 6:
                 this.locked = false;
@@ -72,6 +76,8 @@ public class FairytaleTheePigs extends Fairytale {
                 flipperCallback.flipperNext();
                 break;
             case 7:
+                this.locked = true;
+                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 flipperCallback.flipperPrevious();
                 break;
             case 8:
