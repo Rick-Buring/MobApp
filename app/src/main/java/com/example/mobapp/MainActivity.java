@@ -22,15 +22,22 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         recyclerView.setAdapter(fairytaleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Creating a new MQTT manager
         MQTTManager manager = MQTTManager.getManager();
 
+        // subscribing to all the ping-locations of the fairy-tales
         for (Fairytale tale : Fairytale.fairytales) {
             manager.subscribeToTopic(topicLocation + tale.getTopic());
         }
 
+        // Ping the broker for all open actions
         manager.publishMessage(topicLocation + "availability/request", " ");
     }
 
+    /**
+     * Callback for a new popup to ask the user for confirmation
+     * @param clickedPosition  The action the user clicked on
+     */
     @Override
     public void onItemClick(int clickedPosition) {
         if (!Fairytale.fairytales[clickedPosition].isClickable())
@@ -46,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
     private int clickedPosition;
 
+    /**
+     * Performs the action by the popup
+     */
     @Override
     public void performAction() {
         if (Fairytale.fairytales[clickedPosition].isClickable()) {
@@ -59,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         }
     }
 
+    /**
+     * Closes the connection, starts the animation
+     */
     @Override
     public void finish() {
         super.finish();
