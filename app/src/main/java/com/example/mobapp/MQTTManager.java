@@ -11,8 +11,10 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class MQTTManager {
@@ -76,6 +78,11 @@ public class MQTTManager {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
+
+        String topic = MainActivity.topicLocation + UID;
+        byte[] payload = "Disconnected".getBytes();
+        options.setWill(topic, payload, QUALITY_OF_SERVICE, true);
+
         options.setUserName(USERNAME);
         options.setPassword(PASSWORD.toCharArray());
         // Add more options if necessary
@@ -85,6 +92,7 @@ public class MQTTManager {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d(LOGTAG, "MQTT client is now connected to MQTT broker");
+                    publishMessage(topic, "Connected");
                 }
 
                 @Override
