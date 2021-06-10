@@ -42,7 +42,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     private int step;
     private int image;
     private boolean clickable;
-    private String feedback = "";
+    private int feedback;
     private int storyText;
 
     @Bindable
@@ -118,7 +118,7 @@ public class Fairytale extends BaseObservable implements Serializable {
             this.available = R.string.press_button;
             notifyPropertyChanged(BR.available);
         } else {
-            feedback = message.toString();
+            feedback = Integer.parseInt(message.toString());
             notifyPropertyChanged(BR.feedback);
         }
     }
@@ -169,7 +169,7 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String getFeedback() {
+    public int getFeedback() {
         return feedback;
     }
 
@@ -188,8 +188,8 @@ public class Fairytale extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.step);
     }
 
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
+    public void setFeedback(int feedback) {
+        this.feedback = Math.min(feedback, 100);
         notifyPropertyChanged(BR.feedback);
     }
 }

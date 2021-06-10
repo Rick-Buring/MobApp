@@ -15,4 +15,5 @@
     <string name="step">Stap %1$d / %2$d</string>
     <string name="in_use">Iemand anders gebruikt dit sprookje</string>
     <string name="press_button">druk op de knop om te beginnen</string>
+    <string name="percentage">%1$d procent</string>
 </resources>

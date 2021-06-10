@@ -21,7 +21,7 @@ public class FairytaleTheePigs extends Fairytale {
 
     @Override
     public void nextStep() {
-        setFeedback("");
+        setFeedback(0);
         setStep(getStep() + 1);
         System.out.println("Calling from reset: " + getStep());
 
