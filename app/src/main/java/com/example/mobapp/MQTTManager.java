@@ -17,6 +17,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+/**
+ * The manager that manages all of the MQTT connections
+ */
 public class MQTTManager {
     private static MQTTManager manager = null;
 
@@ -26,8 +29,13 @@ public class MQTTManager {
 
     public static final String LOGTAG = "MQTTManager: ";
 
+    // The url of the MQTT broker
     private static final String BROKER_HOST_URL = "tcp://sendlab.nl:11884";
+
+    // The username to connect to the broker
     private static final String USERNAME = "ti";
+
+    // The password to connect to the broker
     private static final String PASSWORD = "tiavans";
 
     public static final UUID UID = UUID.randomUUID();
@@ -36,10 +44,15 @@ public class MQTTManager {
 
     private final MqttAndroidClient mqttAndroidClient;
 
+    /**
+     * Constructor for the MQTTManager
+     * @param context
+     */
     public MQTTManager(Context context) {
         if (manager == null)
             manager = this;
-        System.out.println(UID);
+
+        Log.i(LOGTAG, "The user id: " + this.UID)
         // Show the automatically generated random client ID
         Log.i(LOGTAG, "Client ID (random) is " + CLIENT_ID);
         // Create the MQTT client, using the URL of the MQTT broker and the client ID
@@ -74,6 +87,11 @@ public class MQTTManager {
         connectToBroker(mqttAndroidClient, CLIENT_ID);
     }
 
+    /**
+     * Starts connection to the broker
+     * @param client  The android device trying to connect
+     * @param clientId  The is of the client
+     */
     public void connectToBroker(MqttAndroidClient client, String clientId) {
         // Set up connection options for the connection to the MQTT broker
         MqttConnectOptions options = new MqttConnectOptions();
@@ -110,6 +128,9 @@ public class MQTTManager {
         }
     }
 
+    /**
+     * Disconnects the connection to the broker
+     */
     public void disconnectFromBroker() {
         try {
             // Try to disconnect from the MQTT broker
@@ -134,6 +155,11 @@ public class MQTTManager {
         }
     }
 
+    /**
+     * Sends a new message to the broker, given a topic
+     * @param topic  The topic to send the message to
+     * @param msg  The message to send
+     */
     public void publishMessage(String topic, String msg) {
         try {
             // Convert the message to a UTF-8 encoded byte array
@@ -154,6 +180,10 @@ public class MQTTManager {
         }
     }
 
+    /**
+     * Subscribs the broker to the given topic
+     * @param topic  The topic to subscribe to
+     */
     public void subscribeToTopic(final String topic) {
         try {
             // Try to subscribe to the topic
@@ -177,6 +207,10 @@ public class MQTTManager {
         }
     }
 
+    /**
+     * Unsubscribes from a given topic
+     * @param topic  The topic to unsubscribe from
+     */
     public void unsubscribeToTopic(final String topic) {
         try {
             // Try to unsubscribe to the topic
