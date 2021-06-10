@@ -13,10 +13,10 @@ import java.util.ArrayList;
 
 public class Fairytale extends BaseObservable implements Serializable {
 
-    private final String name;
-    private final String location;
-    private final String timeToComplete;
-    private final String description;
+    private final int name;
+    private final int location;
+    private final int timeToComplete;
+    private final int description;
     private final String topic;
 
     private int available;
@@ -89,7 +89,7 @@ public class Fairytale extends BaseObservable implements Serializable {
         return this.currentStep.index;
     }
 
-    public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
+    public Fairytale(int name, int location, int timeToComplete, int description, int image, String topic) {
         this.name = name;
         this.location = location;
         this.timeToComplete = timeToComplete;
@@ -103,8 +103,8 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     public static Fairytale[] fairytales = new Fairytale[]{
             new FairytaleTheePigs(),
-            new Fairytale("Hansel And Gretel", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "HanselAndGretel"),
-            new Fairytale("Cinderella", "Thuis", "4 uur", "dit werkt nu in een keer", R.drawable.ic_launcher_foreground, "Cinderella")
+            new Fairytale(R.string.hans_name, R.string.placeholder_location, R.string.placeholder_time, R.string.hans_desc, R.drawable.fairytale_hans, "HansAndGretal"),
+            new Fairytale(R.string.cinderella_name, R.string.placeholder_location, R.string.placeholder_time, R.string.cinderella_desc, R.drawable.fairytale_cinderella, "Cinderella")
     };
 
     public void MessageReceived(MqttMessage message) {
@@ -146,22 +146,22 @@ public class Fairytale extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String getName() {
+    public int getName() {
         return name;
     }
 
     @Bindable
-    public String getLocation() {
+    public int getLocation() {
         return location;
     }
 
     @Bindable
-    public String getTimeToComplete() {
+    public int getTimeToComplete() {
         return timeToComplete;
     }
 
     @Bindable
-    public String getDescription() {
+    public int getDescription() {
         return description;
     }
 

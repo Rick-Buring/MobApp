@@ -21,4 +21,19 @@
     <string name="press_button">Press button to start</string>
 
 
+    <string name="wolf_name">The wulf and the three pigs</string>
+    <string name="wolf_location">At point 3 on map</string>
+    <string name="wolf_time">3 minutes</string>
+    <string name="wolf_desc">Experience the tale of the three little pigs as the wolf</string>
+
+    <string name="placeholder_time">3 minutes</string>
+    <string name="placeholder_location">A nice spot</string>
+
+    <string name="hans_name">Hansel and Gretel</string>
+    <string name="hans_desc">Experience the tale of Hansel and Gretel</string>
+
+    <string name="cinderella_name">Cinderella</string>
+    <string name="cinderella_desc">Experience the tale of Cinderella</string>
+
+
 </resources>

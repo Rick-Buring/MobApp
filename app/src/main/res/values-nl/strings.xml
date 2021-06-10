@@ -16,4 +16,20 @@
     <string name="in_use">Iemand anders gebruikt dit sprookje</string>
     <string name="percentage">%1$d %%</string>
     <string name="press_button">Druk op de knop om te beginnen</string>
+
+    <string name="wolf_name">De wolf en de drie biggetjes</string>
+    <string name="wolf_location">Op punt 3 op de kaart</string>
+    <string name="wolf_time">3 minuten</string>
+    <string name="wolf_desc">Ervaar het sprookje van de drie biggetjes als de wolf</string>
+
+    <string name="placeholder_time">3 minuten</string>
+    <string name="placeholder_location">Op een leuke plek</string>
+
+    <string name="hans_name">Hans en Grietje</string>
+    <string name="hans_desc">Ervaar het sprookje van Hans en Grietje</string>
+
+
+    <string name="cinderella_name">Assepoester</string>
+    <string name="cinderella_desc">Ervaar het verhaal van Assepoester</string>
+
 </resources>

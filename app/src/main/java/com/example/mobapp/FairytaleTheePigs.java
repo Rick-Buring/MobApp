@@ -7,11 +7,12 @@ public class FairytaleTheePigs extends Fairytale {
     private final stepClass[] stepClasses;
 
     public FairytaleTheePigs() {
-        super("The wulf and the three pigs",
-                "At point 3 on map",
-                "3 minutes",
-                "A nice tale", R.drawable.fairytale_biggetjes,
-                "TheWulfAndThreePigs");
+        super(R.string.wolf_name,
+                R.string.wolf_location,
+                R.string.wolf_time,
+                R.string.wolf_desc,
+                R.drawable.fairytale_biggetjes,
+                "WulfAndThreePigs");
 
         this.stepClasses = new stepClass[]{
                 new stepClass(R.string.fairytale_page_0, true, 0),
