@@ -35,6 +35,10 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         binding.setActivity(this);
         binding.setData(fairytale);
         System.out.println("On create was called");
+
+        System.out.println("view : ");
+        this.viewFlipper =  findViewById(R.id.fairytaleImageView);
+
     }
 
     public void Next() {

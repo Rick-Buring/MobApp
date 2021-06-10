@@ -30,7 +30,7 @@ public class MQTTManager {
     private static final String USERNAME = "ti";
     private static final String PASSWORD = "tiavans";
 
-    private static final UUID UID = UUID.randomUUID();
+    public static final UUID UID = UUID.randomUUID();
     private static final String CLIENT_ID = "MobApp" + UID.toString();
     private static final int QUALITY_OF_SERVICE = 0;
 
@@ -48,7 +48,8 @@ public class MQTTManager {
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                Log.d(LOGTAG, "MQTT client lost connection to broker, cause: " + cause.getLocalizedMessage());
+                Log.d(LOGTAG, "MQTT client lost connection to broker, cause: ");
+                cause.printStackTrace();
             }
 
             @Override
@@ -92,7 +93,7 @@ public class MQTTManager {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d(LOGTAG, "MQTT client is now connected to MQTT broker");
-                    publishMessage(topic, "Connected");
+//                    publishMessage(topic, "Connected");
                 }
 
                 @Override

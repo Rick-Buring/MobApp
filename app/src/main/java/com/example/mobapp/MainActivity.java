@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
     public void performAction() {
         if (Fairytale.fairytales[clickedPosition].isClickable()) {
             MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
+            MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic() + "/lastwill",
+                    MQTTManager.UID.toString());
             Intent intent = new Intent(this, FairyTaleInspection.class);
             intent.putExtra(FairyTaleInspection.FAIRYTALE_ID, this.clickedPosition);
             startActivity(intent);

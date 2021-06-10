@@ -74,6 +74,18 @@ public class Fairytale extends BaseObservable implements Serializable {
         }
     }
 
+    public class stepClass{
+
+        private final int text;
+        public stepClass(int text, boolean isTextView){
+            this.text = text;
+        }   
+
+        public int getText() {
+            return text;
+        }
+    }
+
     public Fairytale(String name, String location, String timeToComplete, String description, int image, String topic) {
         this.name = name;
         this.location = location;
