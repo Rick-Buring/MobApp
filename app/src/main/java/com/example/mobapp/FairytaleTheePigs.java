@@ -2,11 +2,20 @@ package com.example.mobapp;
 
 import java.util.ArrayList;
 
+/**
+ * Class that controls all the steps for the story of the three little pigs
+ * Extends general class, Fairytale
+ */
 public class FairytaleTheePigs extends Fairytale {
 
+    // Array to hold all the Steps in this story
     private final stepClass[] stepClasses;
 
+    /**
+     * Main constructor for the Three little pigs tale
+     */
     public FairytaleTheePigs() {
+        // set all the general date for the tale
         super(R.string.wolf_name,
                 R.string.wolf_location,
                 R.string.wolf_time,
@@ -14,6 +23,7 @@ public class FairytaleTheePigs extends Fairytale {
                 R.drawable.fairytale_biggetjes,
                 "WulfAndThreePigs");
 
+        // Initialize all the Steps that are in the story
         this.stepClasses = new stepClass[]{
                 new stepClass(R.string.fairytale_page_0, true, 0),
                 new stepClass(R.string.fairytale_page_1, true, 1),
@@ -28,11 +38,16 @@ public class FairytaleTheePigs extends Fairytale {
         };
 
 
-        setMaxStep(10);
+        setMaxStep(this.stepClasses.length);
         setCurrentStep(this.stepClasses[0]);
+
         this.locked = false;
     }
 
+    /**
+     * Makes the MQTT broker subscribe to all the topics for this story
+     * @throws Exception  Exception thrown by this method
+     */
     @Override
     public void subscribe() throws Exception {
         MQTTManager.getManager().subscribeToTopic(MainActivity.topicLocation + this.getTopic() + "/blower/total");
@@ -40,6 +55,10 @@ public class FairytaleTheePigs extends Fairytale {
 
     private boolean locked;
 
+    /**
+     * Makes the broker perform the correct action of the current step
+     * @param flipperCallback  The callback object to tell to go to the next image to
+     */
     @Override
     public void nextStep(viewFlipperCallback flipperCallback) {
         if(locked && getFeedback() < 100)
@@ -57,33 +76,39 @@ public class FairytaleTheePigs extends Fairytale {
                 break;
             case 3:
                 flipperCallback.flipperNext();
+                // unlocking the blowing of the next house
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 this.locked = true;
                 break;
             case 4:
                 flipperCallback.flipperNext();
                 this.locked = false;
+                // Lower the first house
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/1", " ");
                 break;
                 
             case 5:
                 flipperCallback.flipperPrevious();
+                // unlocking the blower again
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 this.locked = true;
                 break;
             case 6:
                 this.locked = false;
+                // lower the second house
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/2", " ");
                 flipperCallback.flipperNext();
                 break;
             case 7:
                 this.locked = true;
+                // unlocking the blower again
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 flipperCallback.flipperPrevious();
                 break;
             case 8:
                 flipperCallback.flipperSkipOne();
                 this.locked = false;
+                // shake the last house
                 MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/3", " ");
                 break;
             case 9:

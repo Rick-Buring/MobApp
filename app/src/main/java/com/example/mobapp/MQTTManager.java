@@ -164,7 +164,7 @@ public class MQTTManager {
         try {
             // Convert the message to a UTF-8 encoded byte array
             // Store it in an MqttMessage
-            byte[] encodedPayload = msg.getBytes("UTF-8");
+            byte[] encodedPayload = msg.getBytes(StandardCharsets.UTF_8);
             MqttMessage message = new MqttMessage(encodedPayload);
 
             // Set parameters for the message
@@ -173,7 +173,7 @@ public class MQTTManager {
             // Publish the message via the MQTT broker
             this.mqttAndroidClient.publish(topic, message);
             Log.d(LOGTAG, "publishMessage: " + message);
-        } catch (MqttException | UnsupportedEncodingException e) {
+        } catch (MqttException e) {
             Log.e(LOGTAG, "MQTT exception while publishing topic to MQTT broker, msg: " + e.getMessage() +
                     ", cause: " + e.getCause());
             e.printStackTrace();
@@ -235,6 +235,10 @@ public class MQTTManager {
         }
     }
 
+    /**
+     * disconnect the connection to the broker when the app is closed normally
+     * @throws Throwable  The Exception thrown when finalizing goes wrong
+     */
     @Override
     protected void finalize() throws Throwable {
         disconnectFromBroker();
