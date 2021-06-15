@@ -1,25 +1,23 @@
 
-// Gebruikte bibliotheken
+// Libraries
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ESP32Servo.h>
 
 /// CONST VARIABLES //
 
-// consts Reset and clearing
+// MQTT consts Reset and clearing
 const char *MQTT_TOPIC_RESET = "ti/1.4/b1/TheWulfAndThreePigs/reset";
 const char *MQTT_TOPIC_CLEAR_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/clear_blow";
 
-// consts Locking
+// MQTT consts Locking
 const char *MQTT_TOPIC_LOCK = "ti/1.4/b1/TheWulfAndThreePigs";
 const char *MQTT_TOPIC_LOCK_PING = "ti/1.4/b1/availability/request";
 
+// MQTT ping for lastwill system
 const char *MQTT_TOPIC_APP_LASTWILL = "ti/1.4/b1/TheWulfAndThreePigs/lastwill";
 
-// Allow blowing
-const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
-
-// pinnumber for house servo's
+// Pinnumber for house servo's + MQTT consts
 const int SERVO_UP = 180;
 const int SERVO_DOWN = 0;
 
@@ -32,58 +30,56 @@ const char *MQTT_TOPIC_HOUSE2 = "ti/1.4/b1/TheWulfAndThreePigs/house/2";
 const int SERVO_HOUSE_3_PIN = 32;
 const char *MQTT_TOPIC_HOUSE3 = "ti/1.4/b1/TheWulfAndThreePigs/house/3";
 
-// constants for button
+// consts for button
 const int BUTTON1_PIN = 2;
 const char *MQTT_TOPIC_BUTTON1 = "ti/1.4/b1/TheWulfAndThreePigs/startBtn";
 
-// pinnumber for blowreader
+// consts for blowreader
 const int BLOW_READER_PIN = 34;
-const float BLOW_TOTAL_COMPLETE = 65;
+const float BLOW_TOTAL_COMPLETE = 65;  // value that represents 100% of blowing (difficulty)
+
 const char *MQTT_TOPIC_BLOWER = "ti/1.4/b1/TheWulfAndThreePigs/blower/speed";
 const char *MQTT_TOPIC_TOTALBLOW = "ti/1.4/b1/TheWulfAndThreePigs/blower/total";
+const char *MQTT_TOPIC_START_BLOW = "ti/1.4/b1/TheWulfAndThreePigs/next";
 
 // Setting the pins for the LED's
 const int NR_OF_LEDS = 3;
 const int LED_PINS[NR_OF_LEDS] = { 13, 15, 14 };
 const int LED_CHANNELS[NR_OF_LEDS] = { 1, 2, 3 };  // Voor de ESP32 LED control module
 
-const int LINE_LENGTH = 4;
 
 // END OF CONSTANT VALUES   //
 // ------------------------ //
 // MQTT SETUP SETTINGS      //
 
 
-// Zelf instellen voor je eigen WLAN
+//Wifi Jesse
+const char *WLAN_SSID = "Ziggo89DC852";
+const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
 
-// //Wifi Jesse
-// const char *WLAN_SSID = "Ziggo89DC852";
-// const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
-
-// Wifi school laptop Jesse
-const char *WLAN_SSID = "ESP_WIFI_B1";
-const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
+//// Wifi school laptop Jesse
+//const char *WLAN_SSID = "ESP_WIFI_B1";
+//const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
 // Wifi max
 // const char *WLAN_SSID = "Peer";
 // const char *WLAN_ACCESS_KEY = "Welkom Niemand";
 
-// CLIENT_ID moet uniek zijn, dus zelf aanpassen (willekeurige letters en cijfers)
-const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
-//const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_Jasoniseenbitch69420";
 
-// Gegevens van de MQTT broker die we in TI-1.4 kunnen gebruiken
+// CLIENT_ID
+const char *MQTT_CLIENT_ID = "MQTTExampleTryout_zeer_unieke_code_PPOPKKKINBR4352Ad";
+
+// Gegevens van de MQTT broker
 const char *MQTT_BROKER_URL = "sendlab.nl";
 const int MQTT_PORT = 11884;
 const char *MQTT_USERNAME = "ti";
 const char *MQTT_PASSWORD = "tiavans";
-
-// Definieer de te gebruiken Quality of Service (QoS)
 const int MQTT_QOS = 0;
 
+
 WiFiClient wifiClient;
-//WiFiClientSecure wifiClient; // Om een met TLS beveiligde verbinding te kunnen gebruiken
 PubSubClient mqttClient(wifiClient);
+
 
 // END OF MQTT SETTINGS     //
 // ------------------------ //
@@ -119,9 +115,26 @@ bool button1PressedPrev = false;
 bool allowBlow = false;
 int timer = 0;
 
-void moveHouseServo(Servo house, int MQTT_TOPIC, int degree) {
+/**
+ * moves a servo / house to the given point
+ * 
+ * Why does it attach and detach each time it needs to move a sero?
+ * The servo we use uses 5V, provided by the ESP32. However if you use 
+ * more that one servo at the same time it won't run on the ESP power, it wil damage the board.
+ * 
+ * To use multiple servo's you need to provid seperate power (wich we did not see as a correct option)
+ * By detaching the servo after it has moved it does not draw the power anymore and we can go around the 
+ * 1 servo limit.
+ * 
+ * dissatvantage: the servo, when not in use, is not held at its position by power (just by the gears, less strong)
+ * 
+ * Servo: the servo object to move
+ * HOUSE_PIN: the pin the servo is on
+ * degree: the position the servo should move to
+ */
+void moveHouseServo(Servo house, int HOUSE_PIN, int degree) {
   house.setPeriodHertz(50);                    // standard 50 hz servo
-  house.attach(MQTT_TOPIC, 500, 2400);  // Attach the servo after it has been detatched
+  house.attach(HOUSE_PIN, 500, 2400);
   house.write(degree);
   delay(200);
   house.detach();
@@ -157,8 +170,7 @@ void reset() {
 
 /*
  * Stel de LED helderheid in
- * Keer de waarde om (255 wordt uit, 0 wordt aan) omdat de LEDs aangesloten zijn
- * tussen 3.3 V en de pin
+ * pull-up
  */
 void setLedIntensity(int ledNr, byte intensity) {
   byte pwmValue = map(intensity, 255, 0, 0, 255);
@@ -194,6 +206,7 @@ void handleBlower() {
     }
 
 
+    // publishing the blowing percent to the MQTT broker
     totalBlowPercent += percent;
     char payloadPer[10];
     sprintf(payloadPer, "%d", totalBlowPercent);
@@ -208,6 +221,12 @@ void handleBlower() {
   currentBlow = newBlow;
 }
 
+/**
+ * Set the diffetent LEDs
+ * blowpercent > 10 == red on
+ * blowpercent > 50 == amber on
+ * blowpervent >= 100 = green on
+ */
 void handleLED()
 {
   // Setting red LED
@@ -242,6 +261,9 @@ void handleLED()
   setLedIntensity(2, ledIntensities[2]);
 }
 
+/**
+ * resets the blowpercentage to 0 and publishes is to the MQTT broker
+ */
 void clearBlow() {
   totalBlowPercent = 0;
   char payloadPer[10];
@@ -249,10 +271,14 @@ void clearBlow() {
   mqttClient.publish(MQTT_TOPIC_TOTALBLOW, payloadPer);
 }
 
-
-void shakeHouse(Servo servo, int MQTT_TOPIC) {
+/**
+ * Shakes a given servo to the left, then right, then back to centre
+ * Servo: The servo to shake
+ * SERVO_PIN: the pin to servo is on
+ */
+void shakeHouse(Servo servo, int SERVO_PIN) {
   servo.setPeriodHertz(50);             // standard 50 hz servo
-  servo.attach(MQTT_TOPIC, 500, 2400);  // Attach the servo after it has been detatched
+  servo.attach(SERVO_PIN, 500, 2400);  // Attach the servo after it has been detatched
   servo.write(195);
   delay(150);
   servo.write(165);
@@ -284,32 +310,35 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
   Serial.println(topic);
 
   if (strcmp(topic, MQTT_TOPIC_HOUSE1) == 0) {
+    // turn down the first house, then clear the value's
     moveHouseServo(servoHouse1, SERVO_HOUSE_1_PIN, SERVO_DOWN);
     house1up = false;
     clearBlow();
     allowBlow = false;
   } else if (strcmp(topic, MQTT_TOPIC_HOUSE2) == 0) {
+    // turn down the second house, then clear the value's
     moveHouseServo(servoHouse2, SERVO_HOUSE_2_PIN, SERVO_DOWN);
     house2up = false;
     clearBlow();
     allowBlow = false;
   } else if (strcmp(topic, MQTT_TOPIC_HOUSE3) == 0) {
+    // shake the third house 5 times repeatedly
     for (int i = 0; i < 5; i++) {
       shakeHouse(servoHouse3, SERVO_HOUSE_3_PIN);
       delay(500);
     }
 
   } else if (strcmp(topic, MQTT_TOPIC_RESET) == 0) {
+    // reset everything
     reset();
   } else if (strcmp(topic, MQTT_TOPIC_START_BLOW) == 0) {
+    // allow the user to blow in the sensor
     allowBlow = true;
     clearBlow();
 
   } else if (strcmp(topic, MQTT_TOPIC_LOCK) == 0) {
-    char validPayload[16];  // Tijdelijke buffer van 16 chars voor de payload
+    char validPayload[16];  
     byte value;             // Hierin komt de getalwaarde na conversie
-    // Alleen de eerste 'length' bytes in de payload buffer zijn geldig
-    // dus kopieer ze naar een tijdelijke char array en neem niet meer dan 16 chars mee
     strncpy(validPayload, (const char *)payload, length > 16 ? 16 : length);
     // Zet de tekst om in een byte waarde, veronderstel een unsigned int in de tekst
     sscanf((const char *)validPayload, "%u", &value);
