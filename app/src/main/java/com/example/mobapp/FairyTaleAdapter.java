@@ -13,14 +13,24 @@ public class FairyTaleAdapter extends RecyclerView.Adapter<FairyTaleAdapter.Fair
 
     private final OnItemClickListener clickListener;
 
+    /**
+     * Interface for the class that implements the onClick
+     */
     public interface OnItemClickListener {
         void onItemClick(int clickedPosition);
     }
 
+    /**
+     * Constructor for FairytaleAdapter
+     * @param clickListener  The listener to send the click action to
+     */
     public FairyTaleAdapter(OnItemClickListener clickListener) {
         this.clickListener = clickListener;
     }
 
+    /**
+     * Makes sure the items are correctly inserted in the recyclerView
+     */
     public class FairytaleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final ViewDataBinding binding;
 

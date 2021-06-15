@@ -18,13 +18,19 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
     private ViewFlipper viewFlipper;
     private Fairytale fairytale;
 
+    /**
+     * onCreate method for the Inspection screen
+     * @param savedInstanceState  The saved data from the screen that called this intent
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.id = (Integer) getIntent().getExtras().get(FAIRYTALE_ID);
 
+        // Get the fairytale that the user clicked
+        this.id = (Integer) getIntent().getExtras().get(FAIRYTALE_ID);
         fairytale = Fairytale.fairytales[id];
 
+        // subscribing to the topics of the selected fairytale
         try {
             fairytale.subscribe();
         } catch (Exception e) {
@@ -42,6 +48,9 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     }
 
+    /**
+     * Load the next step in the story
+     */
     public void Next() {
         if (fairytale.getStep() + 1 >= fairytale.getMaxStep())
             popup();
@@ -55,6 +64,9 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
         }
     }
 
+    /**
+     * Shows a popup confirming you to quit
+     */
     public void popup() {
         new ShowPopup(getString(R.string.quit_fairy_popup),
                 "Ja",
