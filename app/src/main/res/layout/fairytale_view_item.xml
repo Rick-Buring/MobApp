@@ -9,7 +9,7 @@
 
         <variable
             name="data"
-            type="com.example.mobapp.Fairytale" />
+            type="com.example.mobapp.fairytale.Fairytale" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

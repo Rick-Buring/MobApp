@@ -1,6 +1,9 @@
-package com.example.mobapp;
+package com.example.mobapp.fairytale;
 
-import java.util.ArrayList;
+import com.example.mobapp.BR;
+import com.example.mobapp.logic.MQTTManager;
+import com.example.mobapp.MainActivity;
+import com.example.mobapp.R;
 
 /**
  * Class that controls all the steps for the story of the three little pigs

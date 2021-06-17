@@ -1,4 +1,4 @@
-package com.example.mobapp;
+package com.example.mobapp.logic;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.example.mobapp.R;
 import com.example.mobapp.databinding.PopupWindowBinding;
 
 /**

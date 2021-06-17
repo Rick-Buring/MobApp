@@ -1,4 +1,4 @@
-package com.example.mobapp;
+package com.example.mobapp.fairytale;
 
 /**
  * Callback interface to change the active image on the viewFlipper

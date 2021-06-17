@@ -1,15 +1,16 @@
-package com.example.mobapp;
+package com.example.mobapp.fairytale;
 
 import android.util.Log;
-import android.widget.ViewFlipper;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.example.mobapp.BR;
+import com.example.mobapp.R;
+
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Class that handles the story of a general fairytale

@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobapp.logic.MQTTManager;
+
 /**
  * Creates the opening screen, with the logo in the centre
  */

@@ -1,6 +1,5 @@
-package com.example.mobapp;
+package com.example.mobapp.logic;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,11 @@ import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
+
+import com.example.mobapp.MainActivity;
+import com.example.mobapp.R;
+import com.example.mobapp.fairytale.Fairytale;
+import com.example.mobapp.fairytale.viewFlipperCallback;
 
 
 public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.PopupAction, viewFlipperCallback {

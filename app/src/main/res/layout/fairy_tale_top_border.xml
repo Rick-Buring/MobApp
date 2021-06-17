@@ -6,10 +6,10 @@
     <data>
         <variable
             name="FaryTale"
-            type="com.example.mobapp.Fairytale" />
+            type="com.example.mobapp.fairytale.Fairytale" />
         <variable
             name="Activity"
-            type="com.example.mobapp.FairyTaleInspection" />
+            type="com.example.mobapp.logic.FairyTaleInspection" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

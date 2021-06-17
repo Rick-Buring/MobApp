@@ -4,7 +4,7 @@
     <data>
         <variable
             name="popup"
-            type="com.example.mobapp.ShowPopup" />
+            type="com.example.mobapp.logic.ShowPopup" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
