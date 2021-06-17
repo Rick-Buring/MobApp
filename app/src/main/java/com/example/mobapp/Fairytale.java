@@ -11,7 +11,64 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Class that handles the story of a general fairytale
+ * The class handles showing and holding each step in the tale
+ */
 public class Fairytale extends BaseObservable implements Serializable {
+
+    public static Fairytale[] fairytales = new Fairytale[]{
+            new FairytaleTheePigs(),
+            new Fairytale(R.string.hans_name, R.string.placeholder_location, R.string.placeholder_time, R.string.hans_desc, R.drawable.fairytale_hans, "HansAndGretal"),
+            new Fairytale(R.string.cinderella_name, R.string.placeholder_location, R.string.placeholder_time, R.string.cinderella_desc, R.drawable.fairytale_cinderella, "Cinderella")
+    };
+
+    /**
+     * Internal class stepClass
+     * Represents one step of the story
+     */
+    public class stepClass {
+
+        private final int text;
+        private final int index;
+        private final boolean isTextView;
+
+        /**
+         * Constructor for stepClass
+         * @param text  the text the step holds
+         * @param isTextView  if the text should be showed
+         * @param index  the index of the story this class represents
+         */
+        public stepClass(int text, boolean isTextView, int index) {
+            this.text = text;
+            this.index = index;
+            this.isTextView = isTextView;
+        }
+
+        /**
+         * Getter for this.isTextView
+         * @return  this.isTextView
+         */
+        public boolean isTextView() {
+            return isTextView;
+        }
+
+        /**
+         * Getter for this.text
+         * @return  this.text
+         */
+        public int getText() {
+            return text;
+        }
+
+        /**
+         * Getter for this.index
+         * @return  this.index
+         */
+        public int getIndex(){
+            return index;
+        };
+    }
 
     private final int name;
     private final int location;
@@ -20,75 +77,24 @@ public class Fairytale extends BaseObservable implements Serializable {
     private final String topic;
 
     private int available;
-
-    @Bindable
-    public int getAvailable() {
-        return available;
-    }
-
     private int maxStep;
-
-    @Bindable
-    public int getMaxStep() {
-        return maxStep;
-    }
-
-    public void setMaxStep(int maxStep) {
-        this.maxStep = maxStep;
-        notifyPropertyChanged(BR.maxStep);
-    }
 
     private int step;
     private int image;
     private boolean clickable;
     private int feedback;
 
-    public void reset() {
-        this.step = -1;
-        try {
-            nextStep(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public class stepClass {
-
-        private final int text;
-        private final int index;
-        private final boolean isTextView;
-
-        public stepClass(int text, boolean isTextView, int index) {
-            this.text = text;
-            this.index = index;
-            this.isTextView = isTextView;
-        }
-
-        public boolean isTextView() {
-            return isTextView;
-        }
-
-        public int getText() {
-            return text;
-        }
-
-        public int getIndex(){
-            return index;
-        };
-    }
-
-
     private stepClass currentStep;
 
-    public void setCurrentStep(stepClass currentStep) {
-        this.currentStep = currentStep;
-        notifyPropertyChanged(BR._all);
-    }
-
-    public int getIndex() {
-        return this.currentStep.index;
-    }
-
+    /**
+     * Constructor for Fairytale
+     * @param name  The name of the tale
+     * @param location  The map-location of the tale
+     * @param timeToComplete  The average minutes the tale takes to complete
+     * @param description  The description of the tale
+     * @param image  Main image of the tale
+     * @param topic  The topic of the tale
+     */
     public Fairytale(int name, int location, int timeToComplete, int description, int image, String topic) {
         this.name = name;
         this.location = location;
@@ -101,12 +107,66 @@ public class Fairytale extends BaseObservable implements Serializable {
         this.clickable = false;
     }
 
-    public static Fairytale[] fairytales = new Fairytale[]{
-            new FairytaleTheePigs(),
-            new Fairytale(R.string.hans_name, R.string.placeholder_location, R.string.placeholder_time, R.string.hans_desc, R.drawable.fairytale_hans, "HansAndGretal"),
-            new Fairytale(R.string.cinderella_name, R.string.placeholder_location, R.string.placeholder_time, R.string.cinderella_desc, R.drawable.fairytale_cinderella, "Cinderella")
-    };
+    /**
+     * Setter for this.currentStep
+     * @param currentStep  the value to set currentStep to
+     */
+    public void setCurrentStep(stepClass currentStep) {
+        this.currentStep = currentStep;
+        notifyPropertyChanged(BR._all);
+    }
 
+    /**
+     * Getter for the index of this.currentStep
+     * @return  this.currentStep.index
+     */
+    public int getIndex() {
+        return this.currentStep.index;
+    }
+
+    /**
+     * Getter for this.available
+     * @return  this.available
+     */
+    @Bindable
+    public int getAvailable() {
+        return available;
+    }
+
+    /**
+     * Getter for this.maxStep
+     * @return  this.maxStep
+     */
+    @Bindable
+    public int getMaxStep() {
+        return maxStep;
+    }
+
+    /**
+     * Setter for this.maxStep
+     * @param maxStep  the step this.maxStep needs to be set to
+     */
+    public void setMaxStep(int maxStep) {
+        this.maxStep = maxStep;
+        notifyPropertyChanged(BR.maxStep);
+    }
+
+    /**
+     * Resets all the value's of the story
+     */
+    public void reset() {
+        this.step = -1;
+        try {
+            nextStep(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle the message that was received from the broker
+     * @param message  The message received from the broker
+     */
     public void MessageReceived(MqttMessage message) {
         Log.d("TAG", "MessageReceived: " + message);
         if (message.toString().equals("0")) {
@@ -125,12 +185,29 @@ public class Fairytale extends BaseObservable implements Serializable {
         }
     }
 
+    // TODO
     public void nextStep(viewFlipperCallback flipperCallback) throws Exception {
         throw new Exception("Not implemented");
     }
 
+    // TODO
     public void subscribe() throws Exception {
         throw new Exception("Not implemented");
+    }
+
+    private void setClickable(boolean clickable) {
+        this.clickable = clickable;
+        notifyPropertyChanged(BR.clickable);
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+        notifyPropertyChanged(BR.step);
+    }
+
+    public void setFeedback(int feedback) {
+        this.feedback = Math.min(feedback, 100);
+        notifyPropertyChanged(BR.feedback);
     }
 
     //region getters
@@ -188,20 +265,6 @@ public class Fairytale extends BaseObservable implements Serializable {
     public String getTopic() {
         return topic;
     }
+
     //endregion
-
-    private void setClickable(boolean clickable) {
-        this.clickable = clickable;
-        notifyPropertyChanged(BR.clickable);
-    }
-
-    public void setStep(int step) {
-        this.step = step;
-        notifyPropertyChanged(BR.step);
-    }
-
-    public void setFeedback(int feedback) {
-        this.feedback = Math.min(feedback, 100);
-        notifyPropertyChanged(BR.feedback);
-    }
 }
