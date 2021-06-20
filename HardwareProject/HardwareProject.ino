@@ -497,6 +497,14 @@ void loop() {
   if (timer >= 30000) {
     lock = 2;
 
+   // sending the lock open state
+    char payloadQ[10];
+    sprintf(payloadQ, "%d", lock);
+
+    Serial.print("lock state now is locked: ");
+    Serial.println(lock);
+    mqttClient.publish(MQTT_TOPIC_LOCK, payloadQ);
+
     timer = 0;
   }
 

@@ -67,8 +67,7 @@ public class MQTTManager {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.d(LOGTAG, "MQTT client received message " + message + " on topic " + topic);
+            public void messageArrived(String topic, MqttMessage message) throws Exception { Log.d(LOGTAG, "MQTT client received message " + message + " on topic " + topic);
                 //todo Check what topic the message is for and handle accordingly
                 for (Fairytale tale : Fairytale.fairytales) {
                     if (topic.contains(tale.getTopic())) {
