@@ -111,7 +111,14 @@ public class MQTTManager {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     Log.d(LOGTAG, "MQTT client is now connected to MQTT broker");
-//                    publishMessage(topic, "Connected");
+
+                    // subscribing to all the ping-locations of the fairy-tales
+                    for (Fairytale tale : Fairytale.fairytales) {
+                        manager.subscribeToTopic(MainActivity.topicLocation + tale.getTopic());
+                    }
+
+                    // Ping the broker for all open actions
+                    manager.publishMessage(MainActivity.topicLocation + "availability/request", " ");
                 }
 
                 @Override

@@ -29,14 +29,6 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
 
         // Creating a new MQTT manager
         MQTTManager manager = MQTTManager.getManager();
-
-        // subscribing to all the ping-locations of the fairy-tales
-        for (Fairytale tale : Fairytale.fairytales) {
-            manager.subscribeToTopic(topicLocation + tale.getTopic());
-        }
-
-        // Ping the broker for all open actions
-        manager.publishMessage(topicLocation + "availability/request", " ");
     }
 
     /**
