@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
             return;
         this.clickedPosition = clickedPosition;
         new ShowPopup(getString(R.string.start_fairy_popup),
-                "ja",
-                "nee",
+                getString(R.string.yes),
+                getString(R.string.no),
                 new View(getApplicationContext()), getSystemService(LayoutInflater.class),
                 this
         ).show();

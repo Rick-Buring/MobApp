@@ -1,5 +1,7 @@
 package com.example.mobapp.fairytale;
 
+import android.util.Log;
+
 import com.example.mobapp.BR;
 import com.example.mobapp.logic.MQTTManager;
 import com.example.mobapp.MainActivity;
@@ -10,6 +12,7 @@ import com.example.mobapp.R;
  * Extends general class, Fairytale
  */
 public class FairytaleTheePigs extends Fairytale {
+    private static final String LOGTAG = FairytaleTheePigs.class.getName();
 
     // Array to hold all the Steps in this story
     private final stepClass[] stepClasses;
@@ -64,11 +67,11 @@ public class FairytaleTheePigs extends Fairytale {
      */
     @Override
     public void nextStep(viewFlipperCallback flipperCallback) {
-        if(locked && getFeedback() < 100)
+        if(this.locked && getFeedback() < 100)
             return;
         setFeedback(0);
         setStep(getStep() + 1);
-        System.out.println("Calling from reset: " + getStep());
+        Log.d(LOGTAG , "Calling from reset: " + getStep());
 
         setCurrentStep(this.stepClasses[getStep()]);
         notifyPropertyChanged(BR._all);

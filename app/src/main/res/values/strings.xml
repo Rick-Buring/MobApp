@@ -34,6 +34,8 @@
 
     <string name="cinderella_name">Cinderella</string>
     <string name="cinderella_desc">Experience the tale of Cinderella</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
 </resources>

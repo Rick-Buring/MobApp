@@ -31,5 +31,7 @@
 
     <string name="cinderella_name">Assepoester</string>
     <string name="cinderella_desc">Ervaar het verhaal van Assepoester</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
 
 </resources>
