@@ -27,7 +27,7 @@ public class FairytaleTheePigs extends Fairytale {
                 R.string.wolf_time,
                 R.string.wolf_desc,
                 R.drawable.fairytale_biggetjes,
-                "WulfAndThreePigs");
+                "TheWulfAndThreePigs");// topic name is important, do not change
 
         // Initialize all the Steps that are in the story
         this.stepClasses = new stepClass[]{
