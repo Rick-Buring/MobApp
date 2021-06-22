@@ -56,7 +56,7 @@ public class FairytaleTheePigs extends Fairytale {
      */
     @Override
     public void subscribe() throws Exception {
-        MQTTManager.getManager().subscribeToTopic(MainActivity.topicLocation + this.getTopic() + "/blower/total");
+        MQTTManager.getManager(null).subscribeToTopic(MainActivity.topicLocation + this.getTopic() + "/blower/total");
     }
 
     private boolean locked;
@@ -83,39 +83,39 @@ public class FairytaleTheePigs extends Fairytale {
             case 3:
                 flipperCallback.flipperNext();
                 // unlocking the blowing of the next house
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 this.locked = true;
                 break;
             case 4:
                 flipperCallback.flipperNext();
                 this.locked = false;
                 // Lower the first house
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/1", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/house/1", " ");
                 break;
                 
             case 5:
                 flipperCallback.flipperPrevious();
                 // unlocking the blower again
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 this.locked = true;
                 break;
             case 6:
                 this.locked = false;
                 // lower the second house
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/2", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/house/2", " ");
                 flipperCallback.flipperNext();
                 break;
             case 7:
                 this.locked = true;
                 // unlocking the blower again
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/next", " ");
                 flipperCallback.flipperPrevious();
                 break;
             case 8:
                 flipperCallback.flipperSkipOne();
                 this.locked = false;
                 // shake the last house
-                MQTTManager.getManager().publishMessage(MainActivity.topicLocation + getTopic() + "/house/3", " ");
+                MQTTManager.getManager(null).publishMessage(MainActivity.topicLocation + getTopic() + "/house/3", " ");
                 break;
             case 9:
                 flipperCallback.flipperNext();

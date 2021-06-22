@@ -17,6 +17,7 @@ import com.example.mobapp.logic.ShowPopup;
 public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.OnItemClickListener, ShowPopup.PopupAction {
 
     public static final String topicLocation = "ti/1.4/b1/";
+    private int clickedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Creating a new MQTT manager
-        MQTTManager manager = MQTTManager.getManager();
+        MQTTManager manager = MQTTManager.getManager(this);
     }
 
     /**
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         ).show();
     }
 
-    private int clickedPosition;
+
 
     /**
      * Performs the action by the popup
@@ -58,10 +59,10 @@ public class MainActivity extends AppCompatActivity implements FairyTaleAdapter.
         if (Fairytale.fairytales[clickedPosition].isClickable()) {
 
             // publish the step to MQTT
-            MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
+            MQTTManager.getManager(this).publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic(), "1");
 
-            // update the (custom) lastw ill message to include the new correct step
-            MQTTManager.getManager().publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic() + "/lastwill",
+            // update the (custom) lastWill message to include the new correct step
+            MQTTManager.getManager(this).publishMessage(topicLocation + Fairytale.fairytales[clickedPosition].getTopic() + "/lastwill",
                     MQTTManager.UID.toString());
 
             // starting new intent to the FairyTaleInspection

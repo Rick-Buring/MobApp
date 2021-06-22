@@ -20,7 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         // Opening a new MQTTManager, it wil Establish a new connection
-        new MQTTManager(this);
+        MQTTManager.getManager(this);
 
         // Start the animation on the screen
         new Handler(Looper.getMainLooper()).postDelayed(()-> {

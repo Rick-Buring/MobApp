@@ -31,18 +31,18 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
         // Get the fairytale that the user clicked
         this.id = (Integer) getIntent().getExtras().get(FAIRYTALE_ID);
-        fairytale = Fairytale.fairytales[id];
+        this.fairytale = Fairytale.fairytales[id];
 
         // subscribing to the topics of the selected fairytale
         try {
-            fairytale.subscribe();
+            this.fairytale.subscribe();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         com.example.mobapp.databinding.ActivityFairyTaleInspectionBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_fairy_tale_inspection);
         binding.setActivity(this);
-        binding.setData(fairytale);
+        binding.setData(this.fairytale);
         System.out.println("On create was called");
 
         System.out.println("view : ");
@@ -55,12 +55,12 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
      * Load the next step in the story
      */
     public void Next() {
-        if (fairytale.getStep() + 1 >= fairytale.getMaxStep())
+        if (this.fairytale.getStep() + 1 >= this.fairytale.getMaxStep())
             popup();
         else {
 
             try {
-                fairytale.nextStep(this);
+                this.fairytale.nextStep(this);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,8 +95,8 @@ public class FairyTaleInspection extends AppCompatActivity implements ShowPopup.
 
     @Override
     public void performAction() {
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic(), "2");
-        MQTTManager.getManager().publishMessage(MainActivity.topicLocation + fairytale.getTopic() + "/reset", " ");
+        MQTTManager.getManager(this).publishMessage(MainActivity.topicLocation + fairytale.getTopic(), "2");
+        MQTTManager.getManager(this).publishMessage(MainActivity.topicLocation + fairytale.getTopic() + "/reset", " ");
         this.finish();
     }
 

@@ -39,7 +39,7 @@ public class FairyTaleAdapter extends RecyclerView.Adapter<FairyTaleAdapter.Fair
         public FairytaleViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            itemView.setOnClickListener(this);
+            this.itemView.setOnClickListener(this);
         }
 
         public void bind(Object obj){
