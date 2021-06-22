@@ -22,11 +22,7 @@ import java.util.UUID;
  * The manager that manages all of the MQTT connections
  */
 public class MQTTManager {
-    private static MQTTManager manager = null;
-
-    public static MQTTManager getManager() {
-        return manager;
-    }
+    private static MQTTManager MANAGER = null;
 
     public static final String LOGTAG = "MQTTManager: ";
 
@@ -46,20 +42,30 @@ public class MQTTManager {
     private final MqttAndroidClient mqttAndroidClient;
 
     /**
+     * Singleton method for getting manager
+     * @param context  the context used by the manager
+     * @return  the single instance of MQTTManager
+     */
+    public static MQTTManager getManager(Context context) {
+        if (MANAGER == null)
+            MANAGER = new MQTTManager(context);
+
+        return MANAGER;
+    }
+
+    /**
      * Constructor for the MQTTManager
      * @param context
      */
-    public MQTTManager(Context context) {
-        if (manager == null)
-            manager = this;
+    private MQTTManager(Context context) {
 
         Log.i(LOGTAG, "The user id: " + UID);
         // Show the automatically generated random client ID
         Log.i(LOGTAG, "Client ID (random) is " + CLIENT_ID);
         // Create the MQTT client, using the URL of the MQTT broker and the client ID
-        mqttAndroidClient = new MqttAndroidClient(context, BROKER_HOST_URL, CLIENT_ID);
+        this.mqttAndroidClient = new MqttAndroidClient(context, BROKER_HOST_URL, CLIENT_ID);
         // Set up callbacks to handle events from the MQTT broker
-        mqttAndroidClient.setCallback(new MqttCallback() {
+        this.mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.d(LOGTAG, "MQTT client lost connection to broker, cause: ");
@@ -84,7 +90,7 @@ public class MQTTManager {
         });
 
         // Connect the MQTT client to the MQTT broker
-        connectToBroker(mqttAndroidClient, CLIENT_ID);
+        connectToBroker(this.mqttAndroidClient, CLIENT_ID);
     }
 
     /**
@@ -114,11 +120,11 @@ public class MQTTManager {
 
                     // subscribing to all the ping-locations of the fairy-tales
                     for (Fairytale tale : Fairytale.fairytales) {
-                        manager.subscribeToTopic(MainActivity.topicLocation + tale.getTopic());
+                        MANAGER.subscribeToTopic(MainActivity.topicLocation + tale.getTopic());
                     }
 
                     // Ping the broker for all open actions
-                    manager.publishMessage(MainActivity.topicLocation + "availability/request", " ");
+                    MANAGER.publishMessage(MainActivity.topicLocation + "availability/request", " ");
                 }
 
                 @Override

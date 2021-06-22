@@ -186,12 +186,18 @@ public class Fairytale extends BaseObservable implements Serializable {
         }
     }
 
-    // TODO
+    /**
+     * Throws exeption when the method is called
+     * @throws Exception  not implemented function
+     */
     public void nextStep(viewFlipperCallback flipperCallback) throws Exception {
         throw new Exception("Not implemented");
     }
 
-    // TODO
+    /**
+     * Throws exeption when the method is called
+     * @throws Exception  not implemented function
+     */
     public void subscribe() throws Exception {
         throw new Exception("Not implemented");
     }
@@ -215,32 +221,32 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     @Bindable
     public boolean isClickable() {
-        return clickable;
+        return this.clickable;
     }
 
     @Bindable
     public int getImage() {
-        return image;
+        return this.image;
     }
 
     @Bindable
     public int getName() {
-        return name;
+        return this.name;
     }
 
     @Bindable
     public int getLocation() {
-        return location;
+        return this.location;
     }
 
     @Bindable
     public int getTimeToComplete() {
-        return timeToComplete;
+        return this.timeToComplete;
     }
 
     @Bindable
     public int getDescription() {
-        return description;
+        return this.description;
     }
 
     @Bindable
@@ -250,21 +256,21 @@ public class Fairytale extends BaseObservable implements Serializable {
 
     @Bindable
     public int getFeedback() {
-        return feedback;
+        return this.feedback;
     }
 
     @Bindable
     public boolean isStory() {
-        return currentStep.isTextView;
+        return this.currentStep.isTextView;
     }
 
     @Bindable
     public int getStoryText() {
-        return currentStep.text;
+        return this.currentStep.text;
     }
 
     public String getTopic() {
-        return topic;
+        return this.topic;
     }
 
     //endregion
