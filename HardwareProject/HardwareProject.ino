@@ -53,13 +53,13 @@ const int LED_CHANNELS[NR_OF_LEDS] = { 1, 2, 3 };  // Voor de ESP32 LED control 
 // MQTT SETUP SETTINGS      //
 
 
-//Wifi Jesse
-const char *WLAN_SSID = "Ziggo89DC852";
-const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
+////Wifi Jesse
+//const char *WLAN_SSID = "Ziggo89DC852";
+//const char *WLAN_ACCESS_KEY = "zhbNc5f3fjst";
 
-//// Wifi school laptop Jesse
-//const char *WLAN_SSID = "ESP_WIFI_B1";
-//const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
+// Wifi school laptop Jesse
+const char *WLAN_SSID = "ESP_WIFI_B1";
+const char *WLAN_ACCESS_KEY = "Wijzijnechtdebestegroep";
 
 // Wifi max
 // const char *WLAN_SSID = "Peer";
